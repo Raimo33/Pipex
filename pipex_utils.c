@@ -6,13 +6,16 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/15 15:46:52 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/15 19:07:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 static char	ft_strcmp(char *s1, char *s2);
+static char	*ft_strcpy(char *dest, char *src);
+static char	*ft_strcat(char *dest, char *src);
+static int	ft_strlen(char *str);
 
 void	error(void)
 {
@@ -21,23 +24,30 @@ void	error(void)
 	exit(errno);
 }
 
-// void	ft_cut(char **argv, char *stop)
-// {
-// 	char			**new_argv;
-// 	unsigned short	i;
+char	*find_cmd(char *path, char *cmd)
+{
+	char	**dirs;
+	char	*full_path;
 
-// 	i = 0;
-// 	while (ft_strcmp(argv[i++], stop))
-// 		;
-// 	new_argv = malloc(i);
-// 	buffers.new_argv = new_argv;
-// 	if (!new_argv)
-// 		error();
-// 	new_argv[i] = NULL;
-// 	while (--i)
-// 		new_argv[i] = argv[i];
-// 	return (new_argv);
-// }
+	dirs = split(path, ':');
+	full_path = NULL;
+	while (*dirs)
+	{
+		full_path = malloc(ft_strlen(*dirs) + ft_strlen(cmd) + 2);
+		if (!full_path)
+			break ;
+		ft_strcpy(full_path, *dirs);
+		ft_strcat(full_path, "/");
+		ft_strcat(full_path, cmd);
+		if (access(full_path, X_OK) == 0)
+			break ;
+		free(full_path);
+		full_path = NULL;
+		dirs++;
+	}
+	free_matrix(dirs);
+	return (full_path);
+}
 
 char	**split(char *str, char sep)
 {
@@ -65,16 +75,24 @@ char	**split(char *str, char sep)
 		new_argv[n_words] = malloc((n_chars + 1) * sizeof(char));
 		if (!new_argv[n_words])
 		{
-			while (n_words--)
-				free(new_argv[n_words]);
-			free(new_argv);
+			free_matrix(new_argv);
 			error();
 		}
 		while (str[i + j])
-			new_argv[n_words][j] = str[i + j++];
+		{
+			new_argv[n_words][j] = str[i + j];
+			j++;
+		}
 		new_argv[n_words][j] = '\0';
 	}
 	return (new_argv);
+}
+
+void	free_matrix(char **matrix)
+{
+	while (*matrix)
+		free(*matrix++);
+	free(matrix);
 }
 
 char	*strjoin(char *s1, char *s2)
@@ -98,6 +116,40 @@ char	*strjoin(char *s1, char *s2)
 		*new_str++ = *s2++;
 	*new_str = '\0';
 	return (start);
+}
+
+static char	*ft_strcpy(char *dest, char *src)
+{
+	char	*start;
+
+	start = dest;
+	while (*src != '\0')
+		*dest++ = *src++;
+	*dest = '\0';
+	return (start);
+}
+
+static char	*ft_strcat(char *dest, char *src)
+{
+	char	*start;
+
+	start = dest;
+	while (*dest != '\0')
+		dest++;
+	while (*src != '\0')
+		*dest++ = *src++;
+	*dest = '\0';
+	return (start);
+}
+
+static int	ft_strlen(char *str)
+{
+	char *start;
+
+	start = str;
+	while (*str++ != '\0')
+		;
+	return (str - start);
 }
 
 char	*ft_read_all(int fds)
@@ -144,4 +196,22 @@ char	*ft_read_all(int fds)
 // 	while (s1 && s2 && *s1++ == *s2++)
 // 		;
 // 	return (*s1 - *s2);
+// }
+
+// void	ft_cut(char **argv, char *stop)
+// {
+// 	char			**new_argv;
+// 	unsigned short	i;
+// 
+// 	i = 0;
+// 	while (ft_strcmp(argv[i++], stop))
+// 		;
+// 	new_argv = malloc(i);
+// 	buffers.new_argv = new_argv;
+// 	if (!new_argv)
+// 		error();
+// 	new_argv[i] = NULL;
+// 	while (--i)
+// 		new_argv[i] = argv[i];
+// 	return (new_argv);
 // }

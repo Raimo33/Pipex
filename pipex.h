@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/15 15:50:38 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/15 19:06:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,22 @@ struct s_buffers
 	char	*tot;
 	char	**cmd_args_child;
 	char	**cmd_args_parent;
+	char	*cmd_path_child;
+	char	*cmd_path_parent;
 	char	*path_child;
 	char	*path_parent;
 	char	*full_input;
 };
 
 extern struct s_buffers	buffers;
-extern char **environ;
+extern char 			**environ;
 
 void	error(void);
 // void	ft_cut(char **argv, char *stop);
 char	**split(char *str, char sep);
+void	free_matrix(char **matrix);
 char	*strjoin(char *s1, char *s2);
 char	*ft_read_all(int fds);
-
+char	*find_cmd(char *path, char *cmd);
 
 #endif
