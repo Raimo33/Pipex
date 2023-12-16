@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 16:07:22 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 17:15:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
-# define BUFFER_SIZE 100
+# define BUFFER_SIZE 10
 
 struct s_buffers
 {

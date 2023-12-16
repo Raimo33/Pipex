@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 16:07:49 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 17:28:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	parent(int fds[], char **argv, char *path)
 
 	close(fds[3]);
 	waitpid(0, NULL, 0);
-	out = ft_read_all(fds[0]);
+	out = ft_read_all(fds[2]);
 	close(fds[2]);
 	full_input = strjoin(argv[3], out);
 	free(out);

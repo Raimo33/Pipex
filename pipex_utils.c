@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 16:46:55 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 17:23:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ static int	ft_strlen(char *str)
 	return (str - start);
 }
 
-char	*ft_read_all(int fds)
+char	*ft_read_all(int fd)
 {
 	char			*buf;
 	char			*tot;
@@ -161,18 +161,19 @@ char	*ft_read_all(int fds)
 	unsigned int	j;
 
 	j = 1;
-	tmp = NULL;
+	tot = NULL;
 	buf = NULL;
 	while (1)
 	{
-		if (read(fds, buf, 0) == -1)
+		if (read(fd, buf, 0) == -1)
 			error();
-		buf = malloc(BUFFER_SIZE);
+		buf = malloc(BUFFER_SIZE + 1);
 		buffers.buf = buf;
 		if (!buf)
 			error();
-		if (!read(fds, buf, BUFFER_SIZE))
+		if (!read(fd, buf, BUFFER_SIZE))
 			break ;
+		buf[BUFFER_SIZE] = '\0';
 		tmp = tot;
 		tot = malloc(BUFFER_SIZE * j++ + 1);
 		if (!tot)
@@ -182,11 +183,10 @@ char	*ft_read_all(int fds)
 		while(tmp && tmp[++i])
 			tot[i] = tmp[i];
 		free(tmp);
-		i--;
-		while (buf[++i])
-			tot[i] = buf[i];
+		while (*buf)
+			tot[i++] = *buf++;
 		tot[i] = '\0';
-		free(buf);
+		free(buf - BUFFER_SIZE - 1);
 	}
 	free(buf);
 	return (tot);
