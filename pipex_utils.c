@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 17:23:31 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 18:35:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,46 +152,6 @@ static int	ft_strlen(char *str)
 	return (str - start);
 }
 
-char	*ft_read_all(int fd)
-{
-	char			*buf;
-	char			*tot;
-	char			*tmp;
-	unsigned int	i;
-	unsigned int	j;
-
-	j = 1;
-	tot = NULL;
-	buf = NULL;
-	while (1)
-	{
-		if (read(fd, buf, 0) == -1)
-			error();
-		buf = malloc(BUFFER_SIZE + 1);
-		buffers.buf = buf;
-		if (!buf)
-			error();
-		if (!read(fd, buf, BUFFER_SIZE))
-			break ;
-		buf[BUFFER_SIZE] = '\0';
-		tmp = tot;
-		tot = malloc(BUFFER_SIZE * j++ + 1);
-		if (!tot)
-			error();
-		buffers.tot = tot;
-		i = -1;
-		while(tmp && tmp[++i])
-			tot[i] = tmp[i];
-		free(tmp);
-		while (*buf)
-			tot[i++] = *buf++;
-		tot[i] = '\0';
-		free(buf - BUFFER_SIZE - 1);
-	}
-	free(buf);
-	return (tot);
-}
-
 char	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
 	if (n == 0)
@@ -220,4 +180,44 @@ char	ft_strncmp(char *s1, char *s2, unsigned int n)
 // 	while (--i)
 // 		new_argv[i] = argv[i];
 // 	return (new_argv);
+// }
+
+// char	*ft_read_all(int fd)
+// {
+// 	char			*buf;
+// 	char			*tot;
+// 	char			*tmp;
+// 	unsigned int	i;
+// 	unsigned int	j;
+//
+// 	j = 1;
+// 	tot = NULL;
+// 	buf = NULL;
+// 	while (1)
+// 	{
+// 		if (read(fd, buf, 0) == -1)
+// 			error();
+// 		buf = malloc(BUFFER_SIZE + 1);
+// 		buffers.buf = buf;
+// 		if (!buf)
+// 			error();
+// 		if (read(fd, buf, BUFFER_SIZE) == 0)
+// 			break ;
+// 		buf[BUFFER_SIZE] = '\0';
+// 		tmp = tot;
+// 		tot = malloc(BUFFER_SIZE * j++ + 1);
+// 		if (!tot)
+// 			error();
+// 		buffers.tot = tot;
+// 		i = -1;
+// 		while(tmp && tmp[++i])
+// 			tot[i] = tmp[i];
+// 		free(tmp);
+// 		while (*buf)
+// 			tot[i++] = *buf++;
+// 		tot[i] = '\0';
+// 		free(buf - BUFFER_SIZE - 1);
+// 	}
+// 	free(buf);
+// 	return (tot);
 // }

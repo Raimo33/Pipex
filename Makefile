@@ -6,7 +6,7 @@
 #    By: craimond <craimond@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/16 17:24:29 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/16 17:43:05 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,10 +36,12 @@ fclean: clean
 	@rm -rf $(NAME)
 	@echo deleted $(NAME)
 
+re: fclean all
+
 debug: $(DOBJS) $(HEADER)
 	@gcc -g -Wall -Wextra -Werror $(SRCS) -o $(NAME)
 	@echo starting debugger with default input
 	@gdb --args ./$(NAME) $(INFILE) "$(CMD1)" "$(CMD2)" $(OUTFILE)
 	@fclean
 
-.PHONY: all clean fclean debug
+.PHONY: all clean fclean debug re

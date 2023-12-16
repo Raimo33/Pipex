@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 17:28:31 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 18:28:33 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,20 +65,14 @@ static void	child(int fds[], char **argv, char *path)
 
 static void	parent(int fds[], char **argv, char *path)
 {
-	char	*out;
 	char	**cmd_args;
 	char	*cmd_path;
-	char	*full_input;
 
 	close(fds[3]);
 	waitpid(0, NULL, 0);
-	out = ft_read_all(fds[2]);
+	dup2(fds[2], STDIN_FILENO);
 	close(fds[2]);
-	full_input = strjoin(argv[3], out);
-	free(out);
-	buffers.full_input = full_input;
-	cmd_args = split(full_input, ' ');
-	free(full_input);
+	cmd_args = split(argv[3], ' ');
 	buffers.cmd_args_parent = cmd_args;
 	cmd_path = find_cmd(path, cmd_args[0]);
 	buffers.cmd_path_parent = cmd_path;
