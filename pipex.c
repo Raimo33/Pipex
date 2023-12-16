@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 15:34:57 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 16:07:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 5 || pipe(fds + 2) == -1)
 		error();
-	while (strncmp(*envp, "PATH", 4))
+	while (ft_strncmp(*envp, "PATH", 4))
 		envp++;
 	path = *envp + 5;
 	id = fork();
@@ -45,7 +45,6 @@ static void	child(int fds[], char **argv, char *path)
 {
 	char	**cmd_args;
 	char	*cmd_path;
-	char	*full_input;
 
 	close(fds[2]);
 	if (dup2(fds[3], STDOUT_FILENO) == -1)

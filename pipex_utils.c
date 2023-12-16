@@ -6,13 +6,12 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 15:21:24 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 16:07:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char	ft_strcmp(char *s1, char *s2);
 static char	*ft_strcpy(char *dest, char *src);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
@@ -21,7 +20,7 @@ void	error(void)
 {
 	//tutte le free
 	//tutti i close
-	perror(strerror(errno));
+	perror("Error");
 	exit(errno);
 }
 
@@ -163,6 +162,7 @@ char	*ft_read_all(int fds)
 
 	j = 1;
 	tmp = NULL;
+	buf = NULL;
 	while (1)
 	{
 		if (read(fds, buf, 0) == -1)
@@ -192,12 +192,17 @@ char	*ft_read_all(int fds)
 	return (tot);
 }
 
-// static char	ft_strcmp(char *s1, char *s2)
-// {
-// 	while (s1 && s2 && *s1++ == *s2++)
-// 		;
-// 	return (*s1 - *s2);
-// }
+char	ft_strncmp(char *s1, char *s2, unsigned int n)
+{
+	if (n == 0)
+		return (0);
+	while ((*s1 == *s2) && *s1 && *s2 && n-- > 1)
+	{
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
 
 // void	ft_cut(char **argv, char *stop)
 // {

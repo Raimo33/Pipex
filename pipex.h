@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 15:21:06 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 16:07:22 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <errno.h>
-# include <string.h>
 # include <stdio.h>
 # include <sys/wait.h>
 # include <fcntl.h>
@@ -41,11 +40,11 @@ extern struct s_buffers	buffers;
 extern char 			**environ;
 
 void	error(void);
-// void	ft_cut(char **argv, char *stop);
 char	**split(char *str, char sep);
 void	free_matrix(char **matrix);
 char	*strjoin(char *s1, char *s2);
 char	*ft_read_all(int fds);
 char	*find_cmd(char *path, char *cmd);
+char	ft_strncmp(char *s1, char *s2, unsigned int n);
 
 #endif
