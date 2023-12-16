@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/15 19:08:18 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 15:34:57 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 static void	child(int fds[], char **argv, char *path);
 static void	parent(int fds[], char **argv, char *path);
 
+struct s_buffers buffers;
+
 int	main(int argc, char **argv, char **envp)
 {
-	int		fds[2];
+	int		fds[4]; //infile, outfile, pipe read, pipe write
 	int		id;
 	char	*path;
 
-	if (argc < 5 || pipe(fds) == -1)
+	if (argc < 5 || pipe(fds + 2) == -1)
 		error();
 	while (strncmp(*envp, "PATH", 4))
 		envp++;
@@ -43,11 +45,17 @@ static void	child(int fds[], char **argv, char *path)
 {
 	char	**cmd_args;
 	char	*cmd_path;
+	char	*full_input;
 
-	close(fds[0]);
-	if (dup2(fds[1], STDOUT_FILENO) == -1)
+	close(fds[2]);
+	if (dup2(fds[3], STDOUT_FILENO) == -1)
 		error();
-	close(fds[1]);
+	close(fds[3]);
+	fds[0] = open(argv[1], O_RDONLY);
+	if (fds[0] == -1)
+		error();
+	dup2(fds[0], STDIN_FILENO);
+	close(fds[0]);
 	cmd_args = split(argv[2], ' ');
 	buffers.cmd_args_child = cmd_args;
 	cmd_path = find_cmd(path, cmd_args[0]);
@@ -63,10 +71,10 @@ static void	parent(int fds[], char **argv, char *path)
 	char	*cmd_path;
 	char	*full_input;
 
-	close(fds[1]);
+	close(fds[3]);
 	waitpid(0, NULL, 0);
 	out = ft_read_all(fds[0]);
-	close(fds[0]);
+	close(fds[2]);
 	full_input = strjoin(argv[3], out);
 	free(out);
 	buffers.full_input = full_input;
@@ -75,6 +83,11 @@ static void	parent(int fds[], char **argv, char *path)
 	buffers.cmd_args_parent = cmd_args;
 	cmd_path = find_cmd(path, cmd_args[0]);
 	buffers.cmd_path_parent = cmd_path;
+	fds[1] = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fds[1] == -1)
+		error();
+	dup2(fds[1], STDOUT_FILENO);
+	close(fds[1]);
 	execve(cmd_path, cmd_args, environ);
 	error();
 }

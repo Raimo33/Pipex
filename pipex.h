@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/15 19:06:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 15:21:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,13 @@
 # include <string.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 
 # define BUFFER_SIZE 100
 
 struct s_buffers
 {
+	int		*fds;
 	char	*buf;
 	char	*tot;
 	char	**cmd_args_child;

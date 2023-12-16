@@ -6,7 +6,7 @@
 /*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/15 19:07:53 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/16 15:21:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	ft_strlen(char *str);
 void	error(void)
 {
 	//tutte le free
+	//tutti i close
 	perror(strerror(errno));
 	exit(errno);
 }
