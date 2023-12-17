@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/17 20:31:40 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/17 20:36:43 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,27 @@ void	error(char id)
 
 char	*find_cmd(char *path, char *cmd)
 {
-	char	**dirs;
-	char	*full_path;
-	char	**dirs_start;
+	char			**dirs;
+	char			*full_path;
+	unsigned int	i;
 
 	dirs = ft_split(path, ':');
-	dirs_start = dirs;
 	full_path = NULL;
-	while (*dirs)
+	i = -1;
+	while (dirs[++i])
 	{
-		full_path = malloc(ft_strlen(*dirs) + ft_strlen(cmd) + 2);
+		full_path = malloc(ft_strlen(dirs[i]) + ft_strlen(cmd) + 2);
 		if (!full_path)
 			break ;
-		ft_strcpy(full_path, *dirs);
+		ft_strcpy(full_path, dirs[i]);
 		ft_strcat(full_path, "/");
 		ft_strcat(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
 			break ;
 		free(full_path);
 		full_path = NULL;
-		dirs++;
 	}
-	free_matrix(dirs_start);
+	free_matrix(dirs);
 	return (full_path);
 }
 
