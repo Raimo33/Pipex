@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 18:35:40 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/17 15:52:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ static char	*ft_strcpy(char *dest, char *src);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 
-void	error(void)
+void	error(char id)
 {
-	//tutte le free
-	//tutti i close
+	// tutte le free
+	// tutti i close
 	perror("Error");
-	exit(errno);
+	exit(id);
 }
 
 char	*find_cmd(char *path, char *cmd)
@@ -29,7 +29,7 @@ char	*find_cmd(char *path, char *cmd)
 	char	**dirs;
 	char	*full_path;
 
-	dirs = split(path, ':');
+	dirs = ft_split(path, ':');
 	full_path = NULL;
 	while (*dirs)
 	{
@@ -49,43 +49,45 @@ char	*find_cmd(char *path, char *cmd)
 	return (full_path);
 }
 
-char	**split(char *str, char sep)
+char	**ft_split(char *s, char c)
 {
-	char			**new_argv;
-	unsigned short	i;
-	unsigned short	j;
-	unsigned short	n_words;
-	unsigned short	n_chars;
+	char			**str_array;
+	unsigned int	n_words;
+	unsigned int	i;
+	unsigned int	g;
+	unsigned int	len;
 
+	if (!s || *s == '\0')
+		return (NULL);
 	i = -1;
-	n_words = 1;
-	while (str[++i])
-		if (str[i] == sep)
+	n_words = 0;
+	if (s[0] != c && s[0] != '\0')
+		n_words = 1;
+	while (s[++i + 1] != '\0')
+		if (s[i] == c && s[i + 1] != c && s[i + 1] != '\0')
 			n_words++;
-	new_argv = malloc((n_words + 1) * sizeof(char *));
-	if (!new_argv)
-		error();
-	new_argv[n_words] = NULL;
-	while (--n_words)
+	str_array = malloc(sizeof(char *) * (n_words + 1));
+	if (!str_array)
+		error(9);
+	buffers.str_array = str_array;
+	str_array[n_words] = NULL;
+	g = -1;
+	while (++g < n_words)
 	{
-		j = 0;
-		n_chars = 0;
-		while(str[--i] != sep)
-			n_chars++;
-		new_argv[n_words] = malloc((n_chars + 1) * sizeof(char));
-		if (!new_argv[n_words])
-		{
-			free_matrix(new_argv);
-			error();
-		}
-		while (str[i + j])
-		{
-			new_argv[n_words][j] = str[i + j];
-			j++;
-		}
-		new_argv[n_words][j] = '\0';
+		len = 0;
+		while (*s == c)
+			s++;
+		while (s[len] != c && s[len] != '\0')
+			len++;
+		str_array[g] = malloc(sizeof(char) * (len + 1));
+		if (!str_array[g])
+			error(10);
+		i = 0;
+		while (s[i] != c && s[i] != '\0')
+			str_array[g][i++] = *s++;
+		str_array[g][i] = '\0';
 	}
-	return (new_argv);
+	return (str_array);
 }
 
 void	free_matrix(char **matrix)
@@ -144,7 +146,7 @@ static char	*ft_strcat(char *dest, char *src)
 
 static int	ft_strlen(char *str)
 {
-	char *start;
+	char	*start;
 
 	start = str;
 	while (*str++ != '\0')
@@ -168,7 +170,7 @@ char	ft_strncmp(char *s1, char *s2, unsigned int n)
 // {
 // 	char			**new_argv;
 // 	unsigned short	i;
-// 
+//
 // 	i = 0;
 // 	while (ft_strcmp(argv[i++], stop))
 // 		;

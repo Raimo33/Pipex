@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <craimond@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/16 18:36:35 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/17 15:52:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ struct s_buffers
 	int		*fds;
 	char	*buf;
 	char	*tot;
+	char	**str_array;
 	char	**cmd_args_child;
 	char	**cmd_args_parent;
 	char	*cmd_path_child;
@@ -38,8 +39,8 @@ struct s_buffers
 extern struct s_buffers	buffers;
 extern char 			**environ;
 
-void	error(void);
-char	**split(char *str, char sep);
+void	error(char id);
+char	**ft_split(char *s, char c);
 void	free_matrix(char **matrix);
 char	*strjoin(char *s1, char *s2);
 char	*find_cmd(char *path, char *cmd);
