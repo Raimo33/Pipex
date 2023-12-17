@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/17 15:52:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/17 20:31:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	error(char id)
 {
 	// tutte le free
 	// tutti i close
-	perror("Error");
+	if (id != 0)
+		perror("Error");
 	exit(id);
 }
 
@@ -28,8 +29,10 @@ char	*find_cmd(char *path, char *cmd)
 {
 	char	**dirs;
 	char	*full_path;
+	char	**dirs_start;
 
 	dirs = ft_split(path, ':');
+	dirs_start = dirs;
 	full_path = NULL;
 	while (*dirs)
 	{
@@ -45,7 +48,7 @@ char	*find_cmd(char *path, char *cmd)
 		full_path = NULL;
 		dirs++;
 	}
-	free_matrix(dirs);
+	free_matrix(dirs_start);
 	return (full_path);
 }
 
@@ -82,19 +85,23 @@ char	**ft_split(char *s, char c)
 		str_array[g] = malloc(sizeof(char) * (len + 1));
 		if (!str_array[g])
 			error(10);
-		i = 0;
-		while (s[i] != c && s[i] != '\0')
-			str_array[g][i++] = *s++;
+		i = -1;
+		while (s[++i] != c && s[i] != '\0')
+			str_array[g][i] = s[i];
 		str_array[g][i] = '\0';
+		s += i;
 	}
 	return (str_array);
 }
 
 void	free_matrix(char **matrix)
 {
+	char	**start;
+
+	start = matrix;
 	while (*matrix)
 		free(*matrix++);
-	free(matrix);
+	free(start);
 }
 
 char	*strjoin(char *s1, char *s2)

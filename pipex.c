@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/17 16:31:10 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/17 19:06:21 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,7 @@ int	main(int argc, char **argv, char **envp)
 		child(fds, argv, path);
 	else
 		parent(fds, argv, path);
-	free(buffers.path_child);
-	free(buffers.path_parent);
-	free_matrix(buffers.cmd_args_child);
-	free_matrix(buffers.cmd_args_parent);
+	error(0);
 }
 
 static void	child(int fds[], char **argv, char *path)
@@ -55,7 +52,6 @@ static void	child(int fds[], char **argv, char *path)
 	buffers.cmd_args_child = cmd_args;
 	cmd_path = find_cmd(path, cmd_args[0]);
 	buffers.cmd_path_child = cmd_path;
-	printf("path: %s\n", cmd_path);
 	if (execve(cmd_path, cmd_args, environ) == -1)
 		error(5);
 }
@@ -71,7 +67,6 @@ static void	parent(int fds[], char **argv, char *path)
 	buffers.cmd_args_parent = cmd_args;
 	cmd_path = find_cmd(path, cmd_args[0]);
 	buffers.cmd_path_parent = cmd_path;
-	printf("path: %s\n", cmd_path);
 	fds[1] = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[1] == -1 || dup2(fds[1], STDOUT_FILENO) == -1 || close(fds[1]) == -1 || execve(cmd_path, cmd_args, environ) == -1)
 		error(7);
