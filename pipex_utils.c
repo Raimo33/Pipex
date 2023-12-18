@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-static char	*ft_strncpy(char *dest, char *src);
+static char	*ft_strncpy(char *dest, char *src, unsigned int n);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 
@@ -123,7 +123,7 @@ char	*strjoin(char *s1, char *s2)
 	return (start);
 }
 
-char	*ft_strncpy(char *dest, char *src, unsigned int n)
+static char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
 	char	*start;
 
