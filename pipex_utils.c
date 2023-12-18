@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/18 20:22:44 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/18 20:26:35 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,29 +113,6 @@ void	free_matrix(char **matrix)
 	free(start);
 }
 
-// char	*strjoin(char *s1, char *s2)
-// {
-// 	unsigned int	len1;
-// 	unsigned int	len2;
-// 	char			*start;
-// 	char			*new_str;
-
-// 	len1 = 0;
-// 	len2 = 0;
-// 	while (s1[len1])
-// 		len1++;
-// 	while (s2[len2])
-// 		len2++;
-// 	new_str = malloc((len1 + len2 + 1) * sizeof(char));
-// 	start = new_str;
-// 	while (*s1)
-// 		*new_str++ = *s1++;
-// 	while (*s2)
-// 		*new_str++ = *s2++;
-// 	*new_str = '\0';
-// 	return (start);
-// }
-
 static char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
 	char	*start;
@@ -170,6 +147,31 @@ static int	ft_strlen(char *str)
 		;
 	return (str - start);
 }
+
+// char	*strjoin(char *s1, char *s2)
+// {
+// 	unsigned int	len1;
+// 	unsigned int	len2;
+// 	char			*start;
+// 	char			*new_str;
+
+// 	len1 = 0;
+// 	len2 = 0;
+// 	while (s1[len1])
+// 		len1++;
+// 	while (s2[len2])
+// 		len2++;
+// 	new_str = malloc((len1 + len2 + 1) * sizeof(char));
+// 	start = new_str;
+// 	while (*s1)
+// 		*new_str++ = *s1++;
+// 	while (*s2)
+// 		*new_str++ = *s2++;
+// 	*new_str = '\0';
+// 	return (start);
+// }
+
+
 
 // char	ft_strncmp(char *s1, char *s2, int n)
 // {
