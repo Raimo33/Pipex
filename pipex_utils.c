@@ -132,9 +132,8 @@ static char	*ft_strncpy(char *dest, char *src, unsigned int n)
 	start = dest;
 	while (*src && n--)
 		*dest++ = *src++;
-	if (*src == '\0')
-		while (n--)
-			*dest++ = '\0';
+	while (n--)
+		*dest++ = '\0';
 	return (start);
 }
 
