@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/18 17:34:01 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:35:46 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	main(int argc, char **argv, char **envp)
 		error(5);
 	last_pipe(fds, argv, path);
 	error(0);
+	//FARE GIT PULL DELLE MODIFICHE FATTE IERI SERA IN UTILS SPLIT (STRNCMP ETC.)
 }
 
 static void	child(int fds[], int prev_out, char **argv, char *path)
