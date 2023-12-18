@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/17 20:36:43 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/18 20:22:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,23 @@ static char	*ft_strncpy(char *dest, char *src, unsigned int n);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 
-void	error(char id)
+void	quit(char id)
 {
-	// tutte le free
-	// tutti i close
 	if (id != 0)
 		perror("Error");
+	free(buffers.buf);
+	free(buffers.tot);
+	free_matrix(buffers.str_array);
+	free_matrix(buffers.cmd_args);
+	free(buffers.cmd_path);
+	free(buffers.path);
+	if (buffers.fds)
+	{
+		close(buffers.fds[0]);
+		close(buffers.fds[1]);
+		close(buffers.fds[2]);
+		close(buffers.fds[3]);
+	}
 	exit(id);
 }
 
@@ -72,7 +83,7 @@ char	**ft_split(char *s, char c)
 			n_words++;
 	str_array = malloc(sizeof(char *) * (n_words + 1));
 	if (!str_array)
-		error(9);
+		quit(10);
 	buffers.str_array = str_array;
 	str_array[n_words] = NULL;
 	g = -1;
@@ -85,7 +96,7 @@ char	**ft_split(char *s, char c)
 			len++;
 		str_array[g] = malloc(sizeof(char) * (len + 1));
 		if (!str_array[g])
-			error(10);
+			quit(11);
 		ft_strncpy(str_array[g], s, len);
 		s += len;
 	}
@@ -102,28 +113,28 @@ void	free_matrix(char **matrix)
 	free(start);
 }
 
-char	*strjoin(char *s1, char *s2)
-{
-	unsigned int	len1;
-	unsigned int	len2;
-	char			*start;
-	char			*new_str;
+// char	*strjoin(char *s1, char *s2)
+// {
+// 	unsigned int	len1;
+// 	unsigned int	len2;
+// 	char			*start;
+// 	char			*new_str;
 
-	len1 = 0;
-	len2 = 0;
-	while (s1[len1])
-		len1++;
-	while (s2[len2])
-		len2++;
-	new_str = malloc((len1 + len2 + 1) * sizeof(char));
-	start = new_str;
-	while (*s1)
-		*new_str++ = *s1++;
-	while (*s2)
-		*new_str++ = *s2++;
-	*new_str = '\0';
-	return (start);
-}
+// 	len1 = 0;
+// 	len2 = 0;
+// 	while (s1[len1])
+// 		len1++;
+// 	while (s2[len2])
+// 		len2++;
+// 	new_str = malloc((len1 + len2 + 1) * sizeof(char));
+// 	start = new_str;
+// 	while (*s1)
+// 		*new_str++ = *s1++;
+// 	while (*s2)
+// 		*new_str++ = *s2++;
+// 	*new_str = '\0';
+// 	return (start);
+// }
 
 static char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
@@ -160,15 +171,15 @@ static int	ft_strlen(char *str)
 	return (str - start);
 }
 
-char	ft_strncmp(char *s1, char *s2, int n)
-{
-	while (n-- > 1 && (*s1 == *s2) && *s1 && *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return ((n > 0) * (*s1 - *s2));
-}
+// char	ft_strncmp(char *s1, char *s2, int n)
+// {
+// 	while (n-- > 1 && (*s1 == *s2) && *s1 && *s2)
+// 	{
+// 		s1++;
+// 		s2++;
+// 	}
+// 	return ((n > 0) * (*s1 - *s2));
+// }
 
 // void	ft_cut(char **argv, char *stop)
 // {
@@ -181,7 +192,7 @@ char	ft_strncmp(char *s1, char *s2, int n)
 // 	new_argv = malloc(i);
 // 	buffers.new_argv = new_argv;
 // 	if (!new_argv)
-// 		error();
+// 		quit();
 // 	new_argv[i] = NULL;
 // 	while (--i)
 // 		new_argv[i] = argv[i];
@@ -202,18 +213,18 @@ char	ft_strncmp(char *s1, char *s2, int n)
 // 	while (1)
 // 	{
 // 		if (read(fd, buf, 0) == -1)
-// 			error();
+// 			quit();
 // 		buf = malloc(BUFFER_SIZE + 1);
 // 		buffers.buf = buf;
 // 		if (!buf)
-// 			error();
+// 			quit();
 // 		if (read(fd, buf, BUFFER_SIZE) == 0)
 // 			break ;
 // 		buf[BUFFER_SIZE] = '\0';
 // 		tmp = tot;
 // 		tot = malloc(BUFFER_SIZE * j++ + 1);
 // 		if (!tot)
-// 			error();
+// 			quit();
 // 		buffers.tot = tot;
 // 		i = -1;
 // 		while(tmp && tmp[++i])
