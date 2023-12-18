@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-static char	*ft_strcpy(char *dest, char *src);
+static char	*ft_strncpy(char *dest, char *src, unsigned int n);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 
@@ -30,16 +30,18 @@ char	*find_cmd(char *path, char *cmd)
 	char			**dirs;
 	char			*full_path;
 	unsigned int	i;
+	unsigned int	size;
 
 	dirs = ft_split(path, ':');
 	full_path = NULL;
 	i = -1;
 	while (dirs[++i])
 	{
-		full_path = malloc(ft_strlen(dirs[i]) + ft_strlen(cmd) + 2);
+		size = ft_strlen(dirs[i]) + ft_strlen(cmd) + 2;
+		full_path = malloc(size * sizeof(char));
 		if (!full_path)
 			break ;
-		ft_strcpy(full_path, dirs[i]);
+		ft_strncpy(full_path, dirs[i], size);
 		ft_strcat(full_path, "/");
 		ft_strcat(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
@@ -84,11 +86,8 @@ char	**ft_split(char *s, char c)
 		str_array[g] = malloc(sizeof(char) * (len + 1));
 		if (!str_array[g])
 			error(10);
-		i = -1;
-		while (s[++i] != c && s[i] != '\0')
-			str_array[g][i] = s[i];
-		str_array[g][i] = '\0';
-		s += i;
+		ft_strncpy(str_array[g], s, len);
+		s += len;
 	}
 	return (str_array);
 }
@@ -126,14 +125,15 @@ char	*strjoin(char *s1, char *s2)
 	return (start);
 }
 
-static char	*ft_strcpy(char *dest, char *src)
+static char	*ft_strncpy(char *dest, char *src, unsigned int n)
 {
 	char	*start;
 
 	start = dest;
-	while (*src != '\0')
+	while (*src && n--)
 		*dest++ = *src++;
-	*dest = '\0';
+	while (n--)
+		*dest++ = '\0';
 	return (start);
 }
 
@@ -160,16 +160,14 @@ static int	ft_strlen(char *str)
 	return (str - start);
 }
 
-char	ft_strncmp(char *s1, char *s2, unsigned int n)
+char	ft_strncmp(char *s1, char *s2, int n)
 {
-	if (n == 0)
-		return (0);
-	while ((*s1 == *s2) && *s1 && *s2 && n-- > 1)
+	while (n-- > 1 && (*s1 == *s2) && *s1 && *s2)
 	{
 		s1++;
 		s2++;
 	}
-	return (*s1 - *s2);
+	return ((n > 0) * (*s1 - *s2));
 }
 
 // void	ft_cut(char **argv, char *stop)
