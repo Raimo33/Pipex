@@ -30,16 +30,18 @@ char	*find_cmd(char *path, char *cmd)
 	char			**dirs;
 	char			*full_path;
 	unsigned int	i;
+	unsigned int	size;
 
 	dirs = ft_split(path, ':');
 	full_path = NULL;
 	i = -1;
 	while (dirs[++i])
 	{
-		full_path = malloc(ft_strlen(dirs[i]) + ft_strlen(cmd) + 2);
+		size = ft_strlen(dirs[i]) + ft_strlen(cmd) + 2;
+		full_path = malloc(size * sizeof(char));
 		if (!full_path)
 			break ;
-		ft_strncpy(full_path, dirs[i], ft_strlen(dirs[i]) + 1);
+		ft_strncpy(full_path, dirs[i], size);
 		ft_strcat(full_path, "/");
 		ft_strcat(full_path, cmd);
 		if (access(full_path, X_OK) == 0)
