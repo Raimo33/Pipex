@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: craimond <craimond@student.42.fr>          +#+  +:+       +#+         #
+#    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/16 17:43:05 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/19 17:39:58 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ OBJS = ${SRCS:.c=.o}
 HEADER = pipex.h
 INFILE = infile
 OUTFILE = outfile
-CMD1 = ls -a
-CMD2 = wc -l
+CMD1 = ls -l
+CMD2 = wc -w
 
 $(NAME): $(OBJS) $(HEADER)
 	@cc -Wall -Wextra -Werror $(OBJS) -o $(NAME);

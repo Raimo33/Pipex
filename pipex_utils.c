@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/18 20:26:35 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/19 20:11:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char	*ft_strncpy(char *dest, char *src, unsigned int n);
+static char	*ft_strncpy(char *dest, char *src, int n);
 static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 
@@ -20,12 +20,15 @@ void	quit(char id)
 {
 	if (id != 0)
 		perror("Error");
-	free(buffers.buf);
-	free(buffers.tot);
-	free_matrix(buffers.str_array);
-	free_matrix(buffers.cmd_args);
-	free(buffers.cmd_path);
-	free(buffers.path);
+
+	//la logica della variabile globale buffers non funziona perce' anche essa viene duplicata tra parent e child, quindi non e' possibile liberarla dal parent
+
+	// free(buffers.buf);
+	// free(buffers.tot);
+	// free_matrix(buffers.str_array);
+	// free_matrix(buffers.cmd_args);
+	// free(buffers.cmd_path);
+	// free(buffers.path);
 	if (buffers.fds)
 	{
 		close(buffers.fds[0]);
@@ -98,6 +101,7 @@ char	**ft_split(char *s, char c)
 		if (!str_array[g])
 			quit(11);
 		ft_strncpy(str_array[g], s, len);
+		str_array[g][len] = '\0';
 		s += len;
 	}
 	return (str_array);
@@ -108,34 +112,36 @@ void	free_matrix(char **matrix)
 	char	**start;
 
 	start = matrix;
-	while (*matrix)
+	while (matrix && *matrix)
 		free(*matrix++);
 	free(start);
 }
 
-static char	*ft_strncpy(char *dest, char *src, unsigned int n)
+static char	*ft_strncpy(char *dest, char *src, int n)
 {
-	char	*start;
+	unsigned int	i;
 
-	start = dest;
-	while (*src && n--)
-		*dest++ = *src++;
-	while (n--)
-		*dest++ = '\0';
-	return (start);
+	i = -1;
+	while (src[++i] && n-- > 0)
+		dest[i] = src[i];
+	while (n-- > 0)
+		dest[i++] = '\0';
+	return (dest);
 }
 
 static char	*ft_strcat(char *dest, char *src)
 {
-	char	*start;
+	unsigned int	i;
+	unsigned int	j;
 
-	start = dest;
-	while (*dest != '\0')
-		dest++;
-	while (*src != '\0')
-		*dest++ = *src++;
-	*dest = '\0';
-	return (start);
+	i = 0;
+	while (dest[i] != '\0')
+		i++;
+	j = -1;
+	while (src[++j] != '\0')
+		dest[i + j] = src[j];
+	dest[i + j] = '\0';
+	return (dest);
 }
 
 static int	ft_strlen(char *str)
@@ -146,6 +152,16 @@ static int	ft_strlen(char *str)
 	while (*str++ != '\0')
 		;
 	return (str - start);
+}
+
+char	ft_strncmp(char *s1, char *s2, int n)
+{
+	while (n-- > 1 && (*s1 == *s2) && *s1 && *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((n > 0) * (*s1 - *s2));
 }
 
 // char	*strjoin(char *s1, char *s2)
@@ -169,18 +185,6 @@ static int	ft_strlen(char *str)
 // 		*new_str++ = *s2++;
 // 	*new_str = '\0';
 // 	return (start);
-// }
-
-
-
-// char	ft_strncmp(char *s1, char *s2, int n)
-// {
-// 	while (n-- > 1 && (*s1 == *s2) && *s1 && *s2)
-// 	{
-// 		s1++;
-// 		s2++;
-// 	}
-// 	return ((n > 0) * (*s1 - *s2));
 // }
 
 // void	ft_cut(char **argv, char *stop)
