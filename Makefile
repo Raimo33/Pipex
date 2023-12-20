@@ -6,12 +6,12 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/19 17:39:58 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/20 14:08:38 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
-SRCS = pipex.c pipex_utils.c
+SRCS = pipex.c pipex_utils.c general_utils.c
 OBJS = ${SRCS:.c=.o}
 HEADER = pipex.h
 INFILE = infile

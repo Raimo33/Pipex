@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/19 17:40:48 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/20 15:08:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,9 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 
-# define BUFFER_SIZE 10
-
 struct s_buffers
 {
 	int		*fds;
-	char	*buf;
-	char	*tot;
 	char	**str_array;
 	char	**cmd_args;
 	char	*cmd_path;
@@ -35,11 +31,10 @@ struct s_buffers
 
 extern struct s_buffers	buffers;
 
-void	quit(char id);
+void	quit(char *msg, unsigned short len);
 char	**ft_split(char *s, char c);
-void	free_matrix(char **matrix);
-char	*strjoin(char *s1, char *s2);
 char	*find_cmd(char *path, char *cmd);
 char	ft_strncmp(char *s1, char *s2, int n);
+char	*ft_strncpy(char *dest, char *src, int n);
 
 #endif
