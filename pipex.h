@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/20 15:08:20 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/20 15:49:42 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ struct s_buffers
 	char	**str_array;
 	char	**cmd_args;
 	char	*cmd_path;
-	char	*path;
 };
 
 extern struct s_buffers	buffers;

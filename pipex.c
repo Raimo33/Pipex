@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/20 15:36:46 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/20 15:50:19 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static void	init(int fds[])
 	buffers.str_array = NULL;
 	buffers.cmd_args = NULL;
 	buffers.cmd_path = NULL;
-	buffers.path = NULL;
 }
 
 static void	handle_command(char **argv, char *path, char **envp, int fds[])
@@ -98,7 +97,6 @@ static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 			quit(NULL, 0);
 	buffers.cmd_args = ft_split(*argv, ' ');
 	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
-	free(path);
 	if (execve(buffers.cmd_path, buffers.cmd_args, envp) == -1)
 		quit(NULL, 0);
 }
