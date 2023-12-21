@@ -94,8 +94,7 @@ static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 		if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[1], STDOUT_FILENO) == -1 || close(fds[1]) == -1 || close(fds[0]) == -1)
 			quit(NULL, 0);
 	}
-	else
-		if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[3], STDOUT_FILENO) == -1 || close(fds[3]) == -1 || close(fds[0]) == -1)
+	else if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[3], STDOUT_FILENO) == -1 || close(fds[3]) == -1 || close(fds[0]) == -1)
 			quit(NULL, 0);
 	buffers.cmd_args = ft_split(*argv, ' ');
 	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
