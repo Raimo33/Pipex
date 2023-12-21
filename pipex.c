@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/20 15:50:19 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:08:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*path;
 	int 	fds[4]; // infile, outfile, pipe read, pipe write
+	int		exit_status;
 
 	init(fds);
 	if (argc < 5)
-		quit("wrong number of arguments", 25);
+		quit("wrong number of arguments", 26);
 	path = get_path(envp);
 	fds[0] = open(*(++argv), O_RDONLY);
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -43,8 +44,12 @@ int	main(int argc, char **argv, char **envp)
 		quit(NULL, 0);
 	while (argc-- > 4)
 		handle_command(++argv, path, envp, fds);
-	while (wait(NULL) > 0)
-		;
+	while (wait(&exit_status) > 0)
+	{
+		errno = WEXITSTATUS(exit_status);
+		if (errno != 0)
+			quit(NULL, 0);	
+	}
 	if (errno != ECHILD)
 		quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
@@ -66,7 +71,6 @@ static void	init(int fds[])
 static void	handle_command(char **argv, char *path, char **envp, int fds[])
 {
 	pid_t	id;
-	int		exit_status;
 
 	if (pipe(fds + 2) == -1)
 		quit(NULL, 0);
@@ -77,9 +81,7 @@ static void	handle_command(char **argv, char *path, char **envp, int fds[])
 		handle_pipe(fds, argv, path, envp);
 	else
 	{
-		wait(&exit_status);
-		errno = WEXITSTATUS(exit_status);
-		if (errno != 0 || close(fds[0]) == -1 || close(fds[3]) == -1)
+		if (close(fds[0]) == -1 || close(fds[3]) == -1)
 			quit(NULL, 0);
 		fds[0] = fds[2];
 	}

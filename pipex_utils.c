@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/20 15:49:57 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:25:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static void	free_matrix(char **matrix)
 {
 	char	**start;
 
+	if (!matrix)
+		return ;
 	start = matrix;
 	while (*matrix)
 		free(*matrix++);

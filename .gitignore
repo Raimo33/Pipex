@@ -2,5 +2,7 @@
 infile
 outfile
 *.o
+todo
+pipex
 pipexMedic/
 PIPEXaminator/
