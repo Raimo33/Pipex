@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/21 15:25:41 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:50:22 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ static void	free_matrix(char **matrix);
 void	quit(char *msg, unsigned short len)
 {
 	unsigned short	i;
+	int				real_errno;
 
+	real_errno = errno;
 	if (msg && errno == 0)
 		(void)(write(2, "Error: ", 8) + write(2, msg, len));
 	else if (!msg && errno != 0)
@@ -29,10 +31,21 @@ void	quit(char *msg, unsigned short len)
 	free(buffers.cmd_path);
 	i = -1;
 	if (buffers.fds)
-		while (++i < 5)
+		while (++i < 4)
 			if (buffers.fds[i] != -1)
 				close(buffers.fds[i]);
-	exit(errno);
+	exit(real_errno);
+}
+
+char	check_error(int exit_status, char *full_cmd) //implementare una hash table
+{
+	char	*cmd;
+	char	valid_exit_statuses[1] = {"grep 1, "}; //except for 0
+
+	cmd = ft_split(full_cmd, ' ')[0];
+	
+
+	free_matrix(full_cmd);
 }
 
 char	*find_cmd(char *path, char *cmd)

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/21 15:28:17 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:36:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ struct s_buffers	buffers;
 
 // int main(void)
 // {
-// 	char *argv[] = {"./pipex", "infile", "ls -l", "wc -w", "outfile", NULL};
+// 	char *argv[] = {"./pipex", "infile", "grep hello", "wc -l", "outfile", NULL};
 // 	char *envp[] = {"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", NULL};
 // 	main2(5, argv, envp);
 // }
@@ -32,7 +32,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*path;
 	int 	fds[4]; // infile, outfile, pipe read, pipe write
-	int		exit_status;
 
 	init(fds);
 	if (argc < 5)
@@ -44,12 +43,8 @@ int	main(int argc, char **argv, char **envp)
 		quit(NULL, 0);
 	while (argc-- > 4)
 		handle_command(++argv, path, envp, fds);
-	while (wait(&exit_status) > 0)
-	{
-		errno = WEXITSTATUS(exit_status);
-		if (errno != 0)
-			quit(NULL, 0);	
-	}
+	while (wait(NULL) > 0)
+		;
 	if (errno != ECHILD)
 		quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
@@ -71,6 +66,7 @@ static void	init(int fds[])
 static void	handle_command(char **argv, char *path, char **envp, int fds[])
 {
 	pid_t	id;
+	int		exit_status;
 
 	if (pipe(fds + 2) == -1)
 		quit(NULL, 0);
@@ -81,7 +77,9 @@ static void	handle_command(char **argv, char *path, char **envp, int fds[])
 		handle_pipe(fds, argv, path, envp);
 	else
 	{
-		if (close(fds[0]) == -1 || close(fds[3]) == -1)
+		wait(&exit_status);
+		errno = (WTERMSIG(exit_status) + 128) * WIFSIGNALED(exit_status) + WEXITSTATUS(exit_status) * !WIFSIGNALED(exit_status);
+		if (check_error(errno, *argv) || close(fds[0]) == -1 || close(fds[3]) == -1)
 			quit(NULL, 0);
 		fds[0] = fds[2];
 	}
