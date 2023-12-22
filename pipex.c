@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/21 17:36:05 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/22 11:20:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,12 @@ struct s_buffers	buffers;
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*path;
-	int 	fds[4]; // infile, outfile, pipe read, pipe write
+	int 			fds[4]; // infile, outfile, pipe read, pipe write
+	t_pcs			*processes;
+	unsigned int	i;
+	unsigned int	n_processes;
+	pid_t			id;
+	char			*path;
 
 	init(fds);
 	if (argc < 5)
@@ -41,12 +45,35 @@ int	main(int argc, char **argv, char **envp)
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1 || fds[1] == -1)
 		quit(NULL, 0);
-	while (argc-- > 4)
+	processes = malloc(sizeof(t_pcs) * (argc - 4));
+	if (!processes)
+		quit("Failed to allocate memory", 26);
+	n_processes = argc - 4;
+	buffers.processes = processes;
+	i = -1;
+	while (++i < n_processes)
+	{
 		handle_command(++argv, path, envp, fds);
-	while (wait(NULL) > 0)
-		;
-	if (errno != ECHILD)
-		quit(NULL, 0);
+		if (pipe(fds + 2) == -1)
+			quit(NULL, 0);
+		id = fork();
+		if (id == -1)
+			quit(NULL, 0);
+		if (id == 0)
+			handle_pipe(fds, argv, path, envp);
+		else
+		{
+			if (close(fds[0]) == -1 || close(fds[3]) == -1)
+				quit(NULL, 0);
+			fds[0] = fds[2];
+			processes[i].pid = id;
+			processes[i].cmd = *argv;
+		}
+	}
+	i = -1;
+	while (++i < n_processes)
+		if (waitpid(processes[i].pid, &processes[i].exit_status, 0) == -1 || !check_error(processes[i]))
+			quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
 	quit(NULL, 0);
 }
@@ -61,28 +88,14 @@ static void	init(int fds[])
 	buffers.str_array = NULL;
 	buffers.cmd_args = NULL;
 	buffers.cmd_path = NULL;
+	buffers.processes = NULL;
 }
 
 static void	handle_command(char **argv, char *path, char **envp, int fds[])
 {
 	pid_t	id;
-	int		exit_status;
 
-	if (pipe(fds + 2) == -1)
-		quit(NULL, 0);
-	id = fork();
-	if (id == -1)
-		quit(NULL, 0);
-	if (id == 0)
-		handle_pipe(fds, argv, path, envp);
-	else
-	{
-		wait(&exit_status);
-		errno = (WTERMSIG(exit_status) + 128) * WIFSIGNALED(exit_status) + WEXITSTATUS(exit_status) * !WIFSIGNALED(exit_status);
-		if (check_error(errno, *argv) || close(fds[0]) == -1 || close(fds[3]) == -1)
-			quit(NULL, 0);
-		fds[0] = fds[2];
-	}
+
 }
 
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
