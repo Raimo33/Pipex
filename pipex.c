@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/22 12:53:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:27:27 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 // #include "general_utils.c"
 
 static void	init(int fds[]);
-static void	handle_command(int fds[], char **argv, char *path, char **envp);
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 static char *get_path(char **envp);
 
@@ -87,13 +86,6 @@ static void	init(int fds[])
 	buffers.cmd_args = NULL;
 	buffers.cmd_path = NULL;
 	buffers.processes = NULL;
-}
-
-static void	handle_command(int fds[], char **argv, char *path, char **envp)
-{
-	pid_t	id;
-
-
 }
 
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
