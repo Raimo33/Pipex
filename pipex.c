@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/22 11:20:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/22 12:53:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // #include "general_utils.c"
 
 static void	init(int fds[]);
-static void	handle_command(char **argv, char *path, char **envp, int fds[]);
+static void	handle_command(int fds[], char **argv, char *path, char **envp);
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 static char *get_path(char **envp);
 
@@ -33,7 +33,6 @@ int	main(int argc, char **argv, char **envp)
 	int 			fds[4]; // infile, outfile, pipe read, pipe write
 	t_pcs			*processes;
 	unsigned int	i;
-	unsigned int	n_processes;
 	pid_t			id;
 	char			*path;
 
@@ -47,13 +46,12 @@ int	main(int argc, char **argv, char **envp)
 		quit(NULL, 0);
 	processes = malloc(sizeof(t_pcs) * (argc - 4));
 	if (!processes)
-		quit("Failed to allocate memory", 26);
-	n_processes = argc - 4;
+		quit("failed to allocate memory", 26);
 	buffers.processes = processes;
 	i = -1;
-	while (++i < n_processes)
+	while (++i < argc - 4)
 	{
-		handle_command(++argv, path, envp, fds);
+		handle_command(fds, ++argv, path, envp);
 		if (pipe(fds + 2) == -1)
 			quit(NULL, 0);
 		id = fork();
@@ -71,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	i = -1;
-	while (++i < n_processes)
+	while (++i < argc - 4)
 		if (waitpid(processes[i].pid, &processes[i].exit_status, 0) == -1 || !check_error(processes[i]))
 			quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
@@ -91,7 +89,7 @@ static void	init(int fds[])
 	buffers.processes = NULL;
 }
 
-static void	handle_command(char **argv, char *path, char **envp, int fds[])
+static void	handle_command(int fds[], char **argv, char *path, char **envp)
 {
 	pid_t	id;
 
