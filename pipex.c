@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/22 12:53:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:18:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ struct s_buffers	buffers;
 int	main(int argc, char **argv, char **envp)
 {
 	int 			fds[4]; // infile, outfile, pipe read, pipe write
-	t_pcs			*processes;
-	unsigned int	i;
-	pid_t			id;
+	int	i;
 	char			*path;
 
 	init(fds);
@@ -44,33 +42,12 @@ int	main(int argc, char **argv, char **envp)
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1 || fds[1] == -1)
 		quit(NULL, 0);
-	processes = malloc(sizeof(t_pcs) * (argc - 4));
-	if (!processes)
-		quit("failed to allocate memory", 26);
-	buffers.processes = processes;
 	i = -1;
 	while (++i < argc - 4)
-	{
 		handle_command(fds, ++argv, path, envp);
-		if (pipe(fds + 2) == -1)
-			quit(NULL, 0);
-		id = fork();
-		if (id == -1)
-			quit(NULL, 0);
-		if (id == 0)
-			handle_pipe(fds, argv, path, envp);
-		else
-		{
-			if (close(fds[0]) == -1 || close(fds[3]) == -1)
-				quit(NULL, 0);
-			fds[0] = fds[2];
-			processes[i].pid = id;
-			processes[i].cmd = *argv;
-		}
-	}
 	i = -1;
 	while (++i < argc - 4)
-		if (waitpid(processes[i].pid, &processes[i].exit_status, 0) == -1 || !check_error(processes[i]))
+		if (wait(NULL) == -1)
 			quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
 	quit(NULL, 0);
@@ -86,14 +63,25 @@ static void	init(int fds[])
 	buffers.str_array = NULL;
 	buffers.cmd_args = NULL;
 	buffers.cmd_path = NULL;
-	buffers.processes = NULL;
 }
 
 static void	handle_command(int fds[], char **argv, char *path, char **envp)
 {
 	pid_t	id;
-
-
+	
+	if (pipe(fds + 2) == -1)
+		quit(NULL, 0);
+	id = fork();
+	if (id == -1)
+		quit(NULL, 0);
+	if (id == 0)
+		handle_pipe(fds, argv, path, envp);
+	else
+	{
+		if (close(fds[0]) == -1 || close(fds[3]) == -1)
+			quit(NULL, 0);
+		fds[0] = fds[2];
+	}
 }
 
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp)

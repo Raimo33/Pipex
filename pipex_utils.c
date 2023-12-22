@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/22 12:52:23 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:17:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	quit(char *msg, unsigned short len)
 		perror("Error");
 	free_matrix(buffers.str_array);
 	free_matrix(buffers.cmd_args);
-	free_matrix(buffers.processes);
 	free(buffers.cmd_path);
 	i = -1;
 	if (buffers.fds)
@@ -36,38 +35,6 @@ void	quit(char *msg, unsigned short len)
 			close(buffers.fds[i]);
 	exit(real_errno);
 }
-
-// char	check_error(t_pcs process) //implementare una hash table
-// {
-// 	unsigned short	i;
-// 	unsigned short	len;
-// 	int				valid_code;
-// 	char			*cmd;
-// 	char			*valid_exit[2] = {"grep 1", "awk 2 33"}; //except for 0
-
-// 	len = -1;
-// 	while (process.cmd[i] != ' ')
-// 		len++;
-// 	process.cmd[len] = '\0';
-// 	i = -1;
-// 	while (++i < 2)
-// 	{
-// 		if (ft_strncmp(process.cmd, valid_exit[i], len) == 0)
-// 		{
-// 			valid_exit[i] += len + 1;
-// 			valid_code = 0;
-// 			while (valid_code != process.exit_status && valid_exit[i])
-// 			{
-// 				valid_code = ft_atoi(valid_exit[i]);
-// 				valid_exit[i] += ft_nbrlen(valid_code) + 1;
-// 			}
-// 			if (valid_code != process.exit_status)
-// 				errno = (WTERMSIG(process.exit_status) + 128) * WIFSIGNALED(process.exit_status) + WEXITSTATUS(process.exit_status) * !WIFSIGNALED(process.exit_status);	
-// 			break ;
-// 		}
-// 	}
-// 	return (errno != 0);
-// }
 
 char	*find_cmd(char *path, char *cmd)
 {
