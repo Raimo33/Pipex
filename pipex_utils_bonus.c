@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:02:07 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 16:16:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static char	*ft_strcat(char *dest, char *src);
-static int	ft_strlen(char *str);
 static void	free_matrix(char **matrix);
 
 void	quit(char *msg, unsigned short len)
@@ -29,6 +28,7 @@ void	quit(char *msg, unsigned short len)
 	free_matrix(buffers.str_array);
 	free_matrix(buffers.cmd_args);
 	free(buffers.cmd_path);
+	unlink(".here_doc.tmp");
 	i = -1;
 	if (buffers.fds)
 		while (++i < 4)
@@ -89,13 +89,4 @@ static char	*ft_strcat(char *dest, char *src)
 		dest[i + j] = src[j];
 	dest[i + j] = '\0';
 	return (dest);
-}
-static int	ft_strlen(char *str)
-{
-	char	*start;
-
-	start = str;
-	while (*str++ != '\0')
-		;
-	return (str - start);
 }

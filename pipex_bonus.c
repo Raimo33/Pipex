@@ -1,20 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/23 15:52:04 by craimond          #+#    #+#             */
+/*   Updated: 2023/12/23 16:16:16 by craimond         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:16:02 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 15:12:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 // #include "pipex_utils.c"
 // #include "general_utils.c"
 
 static void	init(int fds[]);
+static void	init_here_doc(int fds[], char *limiter);
 static void	handle_command(int fds[], char **argv, char *path, char **envp);
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 static char *get_path(char **envp);
@@ -30,22 +43,50 @@ struct s_buffers	buffers;
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		fds[4]; // infile, outfile, pipe read, pipe write
-	char	*path;
+	int 			fds[4]; // infile, outfile, pipe read, pipe write
+	int				i;
+	char			*path;
 
 	init(fds);
 	if (argc < 5)
 		quit("wrong number of arguments", 26);
 	path = get_path(envp);
-	fds[0] = open(*argv, O_RDONLY);
+	if (ft_strncmp(*(++argv), "here_doc", 8) == 0)
+		init_here_doc(fds, *(++argv));
+	else
+		fds[0] = open(*argv, O_RDONLY);
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1 || fds[1] == -1)
 		quit(NULL, 0);
-	handle_command(fds, ++argv, path, envp);
-	if (wait(NULL) == -1)
-		quit(NULL, 0);
+	i = -1;
+	while (++i < argc - 4)
+		handle_command(fds, ++argv, path, envp);
+	i = -1;
+	while (++i < argc - 4)
+		if (wait(NULL) == -1)
+			quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
 	quit(NULL, 0);
+}
+
+static void	init_here_doc(int fds[], char *limiter)
+{
+	char	*content;
+	char	*tmp;
+	char	len;
+
+	fds[0] = open(".here_doc.tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fds[0] == -1)
+		quit(NULL, 0);
+	len = ft_strlen(limiter);
+	tmp = get_next_line(0);
+	while (ft_strncmp(tmp, limiter, len) != 0)
+	{
+		content = f_strjoin(content, tmp);
+		free(tmp);
+		tmp = get_next_line(0);
+	}
+	write(fds[0], content, ft_strlen(content));
 }
 
 static void	init(int fds[])
