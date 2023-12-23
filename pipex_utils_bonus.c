@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:16:25 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 19:14:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	quit(char *msg, unsigned short len)
 	free_matrix(buffers.str_array);
 	free_matrix(buffers.cmd_args);
 	free(buffers.cmd_path);
-	unlink(".here_doc.tmp");
 	i = -1;
 	if (buffers.fds)
 		while (++i < 4)
 			close(buffers.fds[i]);
+	unlink(".here_doc.tmp");
 	exit(real_errno);
 }
 

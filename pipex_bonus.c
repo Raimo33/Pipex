@@ -6,18 +6,19 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 15:52:04 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 18:49:56 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 19:42:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+
 // #include "pipex_utils_bonus.c"
 // #include "general_utils_bonus.c"
 // #include "gnl_bonus/get_next_line.c"
 // #include "gnl_bonus/get_next_line_utils.c"
 
 static void	init(int fds[]);
-static void	init_here_doc(int fds[], char *limiter);
+static void	handle_here_doc(int fds[], char **argv, int argc);
 static void	handle_command(int fds[], char **argv, char *path, char **envp);
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 static char *get_path(char **envp);
@@ -44,32 +45,35 @@ int	main(int argc, char **argv, char **envp)
 		quit("wrong number of arguments", 26);
 	path = get_path(envp);
 	if (ft_strncmp(*(++argv), "here_doc", 8) == 0)
-		init_here_doc(fds, *(++argv));
+		handle_here_doc(fds, ++argv, --argc);
 	else
+	{
 		fds[0] = open(*argv, O_RDONLY);
-	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	}
 	if (fds[0] == -1 || fds[1] == -1)
 		quit(NULL, 0);
-	i = -1;
-	while (++i < argc - 4)
+	i = argc;
+	while (argc-- > 4)
 		handle_command(fds, ++argv, path, envp);
-	i = -1;
-	while (++i < argc - 4)
+	while (i-- > 4)
 		if (wait(NULL) == -1)
 			quit(NULL, 0);
 	handle_pipe(fds, argv + 1, path, envp);
 	quit(NULL, 0);
 }
 
-static void	init_here_doc(int fds[], char *limiter)
+static void	handle_here_doc(int fds[], char **argv, int argc)
 {
 	char	*content;
+	char	*limiter;
 	char	*tmp;
 	char	len;
 
 	fds[0] = open(".here_doc.tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1)
 		quit(NULL, 0);
+	limiter = *argv;
 	len = ft_strlen(limiter);
 	content = NULL;
     tmp = get_next_line(0);
@@ -80,11 +84,12 @@ static void	init_here_doc(int fds[], char *limiter)
     	tmp = get_next_line(0);
 	}
 	if (tmp && content)
-		write(fds[0], content, ft_strlen(content));
+		write(fds[0], content, ft_strlen(content) - 1);
 	free(tmp);
 	free(content);
 	if (!tmp)
 		quit("invalid here_doc", 17);
+	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_APPEND, 0644);
 }
 
 static void	init(int fds[])
