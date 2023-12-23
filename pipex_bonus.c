@@ -6,15 +6,15 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 15:52:04 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 18:42:10 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:46:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "pipex_bonus.h"
-#include "pipex_utils_bonus.c"
-#include "general_utils_bonus.c"
-#include "gnl_bonus/get_next_line.c"
-#include "gnl_bonus/get_next_line_utils.c"
+#include "pipex_bonus.h"
+// #include "pipex_utils_bonus.c"
+// #include "general_utils_bonus.c"
+// #include "gnl_bonus/get_next_line.c"
+// #include "gnl_bonus/get_next_line_utils.c"
 
 static void	init(int fds[]);
 static void	init_here_doc(int fds[], char *limiter);
@@ -24,16 +24,16 @@ static char *get_path(char **envp);
 
 struct s_buffers	buffers;
 
-int	main2(int argc, char **argv, char **envp);
+// int	main2(int argc, char **argv, char **envp);
 
-int main(void)
-{
-	char *argv[] = {"./pipex", "here_doc", "CACCA", "infile", "grep hello", "wc -l", "outfile", NULL};
-	char *envp[] = {"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", NULL};
-	main2(7, argv, envp);
-}
+// int main(void)
+// {
+// 	char *argv[] = {"./pipex", "here_doc", "CACCA", "infile", "grep hello", "wc -l", "outfile", NULL};
+// 	char *envp[] = {"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", NULL};
+// 	main2(7, argv, envp);
+// }
 
-int	main2(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	int 			fds[4]; // infile, outfile, pipe read, pipe write
 	int				i;
