@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 15:52:04 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 18:46:04 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:49:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	init_here_doc(int fds[], char *limiter)
 	len = ft_strlen(limiter);
 	content = NULL;
     tmp = get_next_line(0);
-	while (tmp && ft_strncmp(tmp, limiter, len) != 0)
+	while (tmp && ft_strncmp(tmp, limiter, len + 1) != 0)
 	{
    	 	content = ft_strjoin(content, tmp);
    		free(tmp);
