@@ -6,25 +6,15 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 15:52:04 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:16:16 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:42:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 15:12:09 by craimond         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "pipex_bonus.h"
-// #include "pipex_utils.c"
-// #include "general_utils.c"
+//#include "pipex_bonus.h"
+#include "pipex_utils_bonus.c"
+#include "general_utils_bonus.c"
+#include "gnl_bonus/get_next_line.c"
+#include "gnl_bonus/get_next_line_utils.c"
 
 static void	init(int fds[]);
 static void	init_here_doc(int fds[], char *limiter);
@@ -34,14 +24,16 @@ static char *get_path(char **envp);
 
 struct s_buffers	buffers;
 
-// int main(void)
-// {
-// 	char *argv[] = {"./pipex", "infile", "grep hello", "wc -l", "outfile", NULL};
-// 	char *envp[] = {"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", NULL};
-// 	main2(5, argv, envp);
-// }
+int	main2(int argc, char **argv, char **envp);
 
-int	main(int argc, char **argv, char **envp)
+int main(void)
+{
+	char *argv[] = {"./pipex", "here_doc", "CACCA", "infile", "grep hello", "wc -l", "outfile", NULL};
+	char *envp[] = {"PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", NULL};
+	main2(7, argv, envp);
+}
+
+int	main2(int argc, char **argv, char **envp)
 {
 	int 			fds[4]; // infile, outfile, pipe read, pipe write
 	int				i;
@@ -79,14 +71,20 @@ static void	init_here_doc(int fds[], char *limiter)
 	if (fds[0] == -1)
 		quit(NULL, 0);
 	len = ft_strlen(limiter);
-	tmp = get_next_line(0);
-	while (ft_strncmp(tmp, limiter, len) != 0)
+	content = NULL;
+    tmp = get_next_line(0);
+	while (tmp && ft_strncmp(tmp, limiter, len) != 0)
 	{
-		content = f_strjoin(content, tmp);
-		free(tmp);
-		tmp = get_next_line(0);
+   	 	content = ft_strjoin(content, tmp);
+   		free(tmp);
+    	tmp = get_next_line(0);
 	}
-	write(fds[0], content, ft_strlen(content));
+	if (tmp && content)
+		write(fds[0], content, ft_strlen(content));
+	free(tmp);
+	free(content);
+	if (!tmp)
+		quit("invalid here_doc", 17);
 }
 
 static void	init(int fds[])

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:02:07 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:43:33 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,5 @@ static int	ft_strlen(char *str)
 	start = str;
 	while (*str++ != '\0')
 		;
-	return (str - start);
+	return (str - start - 1);
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 15:52:01 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:16:33 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:42:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_arra
     return (str_array);
 }
 
-char	*f_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*newstr;
 	int		i;
@@ -70,10 +70,10 @@ char	*f_strjoin(char *s1, char *s2)
 	newstr = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!newstr)
 		quit("failed to allocate memory", 26);
-	while (s1[++i] != '\0')
+	while (s1 && s1[++i] != '\0')
 		newstr[i] = s1[i];
 	free(s1);
-	n = i;
+	n = i + (!s1);
 	i = -1;
 	while (s2[++i] != '\0')
 		newstr[n + i] = s2[i];
@@ -112,5 +112,5 @@ int	ft_strlen(char *str)
 	start = str;
 	while (*str++ != '\0')
 		;
-	return (str - start);
+	return (str - start - 1);
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 22:27:08 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 15:15:43 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 18:33:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ char	*get_next_line(int fd)
 		buf = f_strjoin(ptr, str);
 		ptr = buf;
 		ret = get_single_line(ptr);
-		if (f_sl(ret) > 0
-			&& (ret[f_sl(ret) - 1] == '\n' || (out < BUFFER_SIZE && out >= 0)))
+		if (ft_strlen(ret) > 0
+			&& (ret[ft_strlen(ret) - 1] == '\n' || (out < BUFFER_SIZE && out >= 0)))
 		{
-			ptr += f_sl(ret) + (*buf == -42);
+			ptr += ft_strlen(ret) + (*buf == -42);
 			return (ret);
 		}
 		free(ret);

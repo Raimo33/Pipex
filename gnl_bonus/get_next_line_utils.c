@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 22:27:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 15:15:36 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 17:05:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ char	*get_single_line(char *str)
 	i = 0;
 	if (!str || *str == '\0')
 		return (NULL);
-	new_str = malloc(f_sl(str) + (str[f_sl(str) - 1] == '\n'));
+	new_str = malloc(ft_strlen(str) + (str[ft_strlen(str) - 1] == '\n'));
 	if (!new_str)
 		return (NULL);
 	while (str[++i] != '\0' && str[i] != '\n')
 		new_str[i - 1] = str[i];
-	if (i <= f_sl(str) && str[i] == '\n')
+	if (i <= ft_strlen(str) && str[i] == '\n')
 	{
 		new_str[i - 1] = str[i];
 		i++;
@@ -43,8 +43,8 @@ char	*f_strjoin(char *s1, char *s2)
 
 	if (s1 && *s1 == -42)
 		s1++;
-	s1_len = f_sl(s1) + 1;
-	s2_len = f_sl(s2);
+	s1_len = ft_strlen(s1) + 1;
+	s2_len = ft_strlen(s2);
 	i = 0;
 	newstr = malloc((s1_len + s2_len + 1));
 	if (newstr)

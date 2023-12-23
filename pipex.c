@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:16:02 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 17:01:54 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		quit("wrong number of arguments", 26);
 	path = get_path(envp);
-	fds[0] = open(*argv, O_RDONLY);
+	fds[0] = open(*(++argv), O_RDONLY);
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1 || fds[1] == -1)
 		quit(NULL, 0);
