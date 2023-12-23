@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:44 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 17:01:54 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 21:14:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	init(int fds[]);
 static void	handle_command(int fds[], char **argv, char *path, char **envp);
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 static char *get_path(char **envp);
+static void wait_child(void);
 
 struct s_buffers	buffers;
 
@@ -35,17 +36,35 @@ int	main(int argc, char **argv, char **envp)
 
 	init(fds);
 	if (argc < 5)
-		quit("wrong number of arguments", 26);
+		quit(1, "wrong number of arguments", 26);
 	path = get_path(envp);
 	fds[0] = open(*(++argv), O_RDONLY);
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1 || fds[1] == -1)
-		quit(NULL, 0);
+		quit(2, NULL, 0);
 	handle_command(fds, ++argv, path, envp);
-	if (wait(NULL) == -1)
-		quit(NULL, 0);
+	wait_child();
 	handle_pipe(fds, argv + 1, path, envp);
-	quit(NULL, 0);
+	quit(0, NULL, 0);
+}
+
+static void wait_child(void)
+{
+	int		status;
+
+	if (wait(&status) == -1)
+		quit(3, NULL, 0);
+	if (WIFSIGNALED(status))
+		quit(WTERMSIG(status) + 128, "process interrupted by a signal", 32);
+	else
+	{
+		status = WEXITSTATUS(status);
+		if (status > 42)
+		{
+			errno = status - 42;
+			quit(4, NULL, 0);
+		}
+	}
 }
 
 static void	init(int fds[])
@@ -65,16 +84,16 @@ static void	handle_command(int fds[], char **argv, char *path, char **envp)
 	pid_t	id;
 	
 	if (pipe(fds + 2) == -1)
-		quit(NULL, 0);
+		quit(5, NULL, 0);
 	id = fork();
 	if (id == -1)
-		quit(NULL, 0);
+		quit(6, NULL, 0);
 	if (id == 0)
 		handle_pipe(fds, argv, path, envp);
 	else
 	{
 		if (close(fds[0]) == -1 || close(fds[3]) == -1)
-			quit(NULL, 0);
+			quit(7, NULL, 0);
 		fds[0] = fds[2];
 	}
 }
@@ -84,14 +103,14 @@ static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 	if (*(argv + 2) == NULL)
 	{
 		if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[1], STDOUT_FILENO) == -1 || close(fds[1]) == -1 || close(fds[0]) == -1)
-			quit(NULL, 0);
+			quit(8, "", 0);
 	}
 	else if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[3], STDOUT_FILENO) == -1 || close(fds[3]) == -1 || close(fds[0]) == -1)
-			quit(NULL, 0);
+			quit(42 + errno, "", 0);
 	buffers.cmd_args = ft_split(*argv, ' ');
 	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
 	if (execve(buffers.cmd_path, buffers.cmd_args, envp) == -1)
-		quit(NULL, 0);
+		quit(42 + errno, "", 0);
 }
 
 static char *get_path(char **envp)
@@ -99,6 +118,6 @@ static char *get_path(char **envp)
 	while (envp && *envp)
 		if (ft_strncmp(*envp++, "PATH=", 5) == 0)
 			return (*(envp - 1) + 5);
-	quit("PATH not found", 15);
+	quit(9, "PATH not found", 15);
 	return (NULL);
 }

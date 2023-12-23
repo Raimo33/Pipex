@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:04:23 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 20:21:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ struct s_buffers
 
 extern struct s_buffers	buffers;
 
-void	quit(char *msg, unsigned short len);
+void	quit(unsigned char id, char *msg, unsigned short len);
 char	**ft_split(char *s, char c);
 char	*find_cmd(char *path, char *cmd);
 char	ft_strncmp(char *s1, char *s2, int n);

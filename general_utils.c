@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 13:56:23 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 16:02:10 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 20:40:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	**ft_split(char *s, char c)
 			n_words++;
 	str_array = malloc(sizeof(char *) * (n_words + 1));
 	if (!str_array)
-		quit("failed to allocate memory", 26);
+		quit(10, "failed to allocate memory", 26);
 	buffers.str_array = str_array;
 	str_array[n_words] = NULL;
 	return (fill_matrix(n_words, s, c, str_array));
@@ -52,7 +52,7 @@ static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_arra
 			len++;
 		str_array[g] = malloc(sizeof(char) * (len + 1));
 		if (!str_array[g])
-			quit("failed to allocate memory", 26);
+			quit(11, "failed to allocate memory", 26);
 		ft_strncpy(str_array[g], s, len);
 		str_array[g][len] = '\0';
 		s += len;

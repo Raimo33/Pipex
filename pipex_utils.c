@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 18:43:33 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/23 21:20:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,13 @@ static char	*ft_strcat(char *dest, char *src);
 static int	ft_strlen(char *str);
 static void	free_matrix(char **matrix);
 
-void	quit(char *msg, unsigned short len)
+void	quit(unsigned char id, char *msg, unsigned short len)
 {
 	unsigned short	i;
-	int				real_errno;
 
-	real_errno = errno;
-	if (msg && errno == 0)
+	if (msg && *msg)
 		(void)(write(2, "Error: ", 8) + write(2, msg, len));
-	else if (!msg && errno != 0)
+	else if (!msg && id != 0)
 		perror("Error");
 	free_matrix(buffers.str_array);
 	free_matrix(buffers.cmd_args);
@@ -33,7 +31,7 @@ void	quit(char *msg, unsigned short len)
 	if (buffers.fds)
 		while (++i < 4)
 			close(buffers.fds[i]);
-	exit(real_errno);
+	exit(id);
 }
 
 char	*find_cmd(char *path, char *cmd)
