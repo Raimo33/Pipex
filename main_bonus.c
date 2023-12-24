@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:56:54 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 14:39:26 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 16:43:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	char			*path;
 
 	init(fds);
-	if (argc < 5)
+	if (argc < 5 + (ft_strncmp(argv[1], "here_doc", 8) == 0))
 		quit(1, "wrong number of arguments", 26);
 	path = get_path(envp);
 	if (ft_strncmp(*(++argv), "here_doc", 8) == 0)
@@ -38,6 +38,6 @@ int	main(int argc, char **argv, char **envp)
 		handle_command(fds, ++argv, path, envp);
 	while (i-- > 4)
 		wait_child();
-	last_pipe(fds, argv + 1, path, envp);
+	handle_pipe(fds, argv + 1, path, envp);
 	quit(0, NULL, 0);
 }

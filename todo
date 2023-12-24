@@ -1,1 +1,1 @@
-eliminare il file .here_doc.tmp
+eliminare il file .here_doc.tmp (dopo ogni close mettere gli fd a -1)

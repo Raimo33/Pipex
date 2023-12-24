@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 16:12:22 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 16:47:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ extern struct s_buffers	buffers;
 
 void	init(int fds[]);
 void	handle_command(int fds[], char **argv, char *path, char **envp);
-void	last_pipe(int fds[], char **argv, char *path, char **envp);
+void	handle_pipe(int fds[], char **argv, char *path, char **envp);
 void	wait_child(void);
 char 	*get_path(char **envp);
 char	*find_cmd(char *path, char *cmd);
