@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:25:21 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:03:59 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:29:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 	int		out_fd;
 
 	out_fd = 1 * (!*(argv + 2)) + 3 * (*(argv + 2) != NULL);
-	if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[out_fd], STDOUT_FILENO) == -1 || reset_fd(&fds[out_fd]) == -1 || reset_fd(&fds[0]) == -1)
+	if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[out_fd], STDOUT_FILENO) == -1 || reset_fd(&fds[0]) == -1 || reset_fd(&fds[out_fd]) == -1)
 		quit(42, NULL, 0);
 	buffers.cmd_args = ft_split(*argv, ' ');
 	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
@@ -79,7 +79,6 @@ void	wait_child(void)
 		if (status >= 42 && status <= 44)
 			exit(status);
 	}
-
 }
 
 static char reset_fd(int *fd)

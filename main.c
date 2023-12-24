@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:03:03 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 16:43:49 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:10:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,4 @@ int	main(int argc, char **argv, char **envp)
 	handle_command(fds, ++argv, path, envp);
 	wait_child();
 	handle_pipe(fds, argv + 1, path, envp);
-	quit(0, NULL, 0);
 }

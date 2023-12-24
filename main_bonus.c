@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:56:54 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 16:43:53 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:26:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ int	main(int argc, char **argv, char **envp)
 	i = argc;
 	while (argc-- > 4)
 		handle_command(fds, ++argv, path, envp);
+	unlink(".here_doc.tmp");
 	while (i-- > 4)
 		wait_child();
 	handle_pipe(fds, argv + 1, path, envp);
-	quit(0, NULL, 0);
 }
