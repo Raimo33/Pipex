@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:57:18 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 15:37:41 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 16:19:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_arra
 		str_array[g][len] = '\0';
 		s += len;
 	}
+	buffers.str_array = NULL;
     return (str_array);
 }
 
@@ -106,7 +107,9 @@ void	quit(unsigned char id, char *msg, unsigned short len)
 	else if (!msg && id != 0)
 		perror("Error");
 	free_matrix(buffers.str_array);
-	//free_matrix(buffers.cmd_args);
+	buffers.str_array = NULL;
+	free_matrix(buffers.cmd_args);
+	buffers.cmd_args = NULL;
 	free(buffers.cmd_path);
 	i = -1;
 	if (buffers.fds)

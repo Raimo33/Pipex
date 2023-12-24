@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/24 14:47:20 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/24 16:16:25 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,16 +21,16 @@ CMD1 = cw -l
 CMD2 = wc -l
 
 $(NAME): $(OBJS) $(HEADER)
-	@cc -Wall -Wextra -Werror $(OBJS) -o $(NAME)
+	@cc -g -Wall -Wextra -Werror $(OBJS) -o $(NAME)
 	@echo compiled $(NAME)
 
 all: $(NAME)
 
 %.o: %.c
-	@cc -Wall -Wextra -Werror -c $< -o $@
+	@cc -g -Wall -Wextra -Werror -c $< -o $@
 
 bonus: $(OBJS) $(OBJS_BONUS) $(HEADER) ${HEADER_BONUS}
-	@cc -Wall -Wextra -Werror $(OBJS_BONUS) -o $(NAME)
+	@cc -g -Wall -Wextra -Werror $(OBJS_BONUS) -o $(NAME)
 	@echo compiled $(NAME) with bonus
 
 clean: $(OBJS)

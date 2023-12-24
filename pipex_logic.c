@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:25:21 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 15:50:37 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 16:02:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,39 +46,39 @@ void	handle_command(int fds[], char **argv, char *path, char **envp)
 
 static void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 {
-	char	**cmd_args;
 	char	error_msg[50];
 
 	if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[3], STDOUT_FILENO) == -1 || close(fds[3]) == -1 || close(fds[0]) == -1)
 		quit(6, NULL, 0);
-	cmd_args = ft_split(*argv, ' ');
-	buffers.cmd_path = find_cmd(path, cmd_args[0]);
+	buffers.cmd_args = ft_split(*argv, ' ');
+	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
 	if (!buffers.cmd_path)
 	{
+		error_msg[0] = '\0';
 		ft_strcat(error_msg, "command not found: ");
-		ft_strcat(error_msg, cmd_args[0]);
+		ft_strcat(error_msg, buffers.cmd_args[0]);
 		quit(10, error_msg, ft_strlen(error_msg));
 	}
-	if (execve(buffers.cmd_path, cmd_args, envp) == -1)
+	if (execve(buffers.cmd_path, buffers.cmd_args, envp) == -1)
 		quit(8, NULL, 0);
 }
 
 void	last_pipe(int fds[], char **argv, char *path, char **envp)
 {
-	char	**cmd_args;
 	char	error_msg[50];
 
 	if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[1], STDOUT_FILENO) == -1 || close(fds[1]) == -1 || close(fds[0]) == -1)
 		quit(9, NULL, 0);
-	cmd_args = ft_split(*argv, ' ');
-	buffers.cmd_path = find_cmd(path, cmd_args[0]);
+	buffers.cmd_args = ft_split(*argv, ' ');
+	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
 	if (!buffers.cmd_path)
 	{
+		error_msg[0] = '\0';
 		ft_strcat(error_msg, "command not found: ");
-		ft_strcat(error_msg, cmd_args[0]);
+		ft_strcat(error_msg, buffers.cmd_args[0]);
 		quit(10, error_msg, ft_strlen(error_msg));
 	}
-	if (execve(buffers.cmd_path, cmd_args, envp) == -1)
+	if (execve(buffers.cmd_path, buffers.cmd_args, envp) == -1)
 		quit(11, NULL, 0);
 }
 
@@ -91,9 +91,6 @@ void	wait_child(void)
 	if (WIFSIGNALED(status))
 		quit(WTERMSIG(status) + 128, "process interrupted by a signal", 32);
 	else
-	{
-		status = WEXITSTATUS(status);
-		if (status != 0)
-			exit(status);
-	}
+		if (WEXITSTATUS(status) != 0)
+			exit(WEXITSTATUS(status));
 }
