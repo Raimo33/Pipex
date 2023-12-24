@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/24 14:33:16 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/24 14:47:20 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ OBJS = ${SRCS:.c=.o}
 OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 HEADER = pipex.h
 HEADER_BONUS = pipex_bonus.h
-CMD1 = grep hello
+CMD1 = cw -l
 CMD2 = wc -l
 
 $(NAME): $(OBJS) $(HEADER)

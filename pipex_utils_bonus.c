@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 14:40:58 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 15:37:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_here_doc(int fds[], char **argv, int argc)
 
 	fds[0] = open(".here_doc.tmp", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1)
-		quit(13, NULL, 0);
+		quit(16, NULL, 0);
 	limiter = *argv;
 	len = ft_strlen(limiter);
 	content = NULL;
@@ -37,7 +37,7 @@ void	handle_here_doc(int fds[], char **argv, int argc)
 	free(tmp);
 	free(content);
 	if (!tmp)
-		quit(14, "invalid here_doc", 17);
+		quit(17, "invalid here_doc", 17);
 	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_APPEND, 0644);
 }
 
@@ -50,7 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	i = -1;
 	newstr = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!newstr)
-		quit(15, "failed to allocate memory", 26);
+		quit(18, "failed to allocate memory", 26);
 	while (s1 && s1[++i] != '\0')
 		newstr[i] = s1[i];
 	free(s1);
