@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:57:18 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 14:34:01 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 14:40:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char *get_path(char **envp)
 	while (envp && *envp)
 		if (ft_strncmp(*envp++, "PATH=", 5) == 0)
 			return (*(envp - 1) + 5);
-	quit(11, "PATH not found", 15);
+	quit(10, "PATH not found", 15);
 	return (NULL);
 }
 
@@ -68,7 +68,7 @@ char	**ft_split(char *s, char c)
 			n_words++;
 	str_array = malloc(sizeof(char *) * (n_words + 1));
 	if (!str_array)
-		quit(10, "failed to allocate memory", 26);
+		quit(11, "failed to allocate memory", 26);
 	buffers.str_array = str_array;
 	str_array[n_words] = NULL;
 	return (fill_matrix(n_words, s, c, str_array));
@@ -89,7 +89,7 @@ static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_arra
 			len++;
 		str_array[g] = malloc(sizeof(char) * (len + 1));
 		if (!str_array[g])
-			quit(11, "failed to allocate memory", 26);
+			quit(12, "failed to allocate memory", 26);
 		ft_strncpy(str_array[g], s, len);
 		str_array[g][len] = '\0';
 		s += len;
