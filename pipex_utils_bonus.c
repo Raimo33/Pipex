@@ -6,85 +6,58 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 21:28:40 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/24 14:36:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static char	*ft_strcat(char *dest, char *src);
-static void	free_matrix(char **matrix);
-
-void	quit(unsigned char id, char *msg, unsigned short len)
+void	handle_here_doc(int fds[], char **argv, int argc)
 {
-	unsigned short	i;
+	char	*content;
+	char	*limiter;
+	char	*tmp;
+	char	len;
 
-	if (msg && *msg)
-		(void)(write(2, "Error: ", 8) + write(2, msg, len));
-	else if (!msg && id != 0)
-		perror("Error");
-	free_matrix(buffers.str_array);
-	free_matrix(buffers.cmd_args);
-	free(buffers.cmd_path);
-	i = -1;
-	if (buffers.fds)
-		while (++i < 4)
-			close(buffers.fds[i]);
-	unlink(".here_doc.tmp");
-	exit(id);
-}
-
-char	*find_cmd(char *path, char *cmd)
-{
-	char			**dirs;
-	char			*full_path;
-	unsigned int	i;
-	unsigned int	size;
-
-	dirs = ft_split(path, ':');
-	full_path = NULL;
-	i = -1;
-	while (dirs[++i])
+	fds[0] = open(".here_doc.tmp", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fds[0] == -1)
+		quit(5, NULL, 0);
+	limiter = *argv;
+	len = ft_strlen(limiter);
+	content = NULL;
+    tmp = get_next_line(0);
+	while (tmp && ft_strncmp(tmp, limiter, len + 1) != 0)
 	{
-		size = ft_strlen(dirs[i]) + ft_strlen(cmd) + 2;
-		full_path = malloc(size * sizeof(char));
-		if (!full_path)
-			break ;
-		ft_strncpy(full_path, dirs[i], size);
-		ft_strcat(full_path, "/");
-		ft_strcat(full_path, cmd);
-		if (access(full_path, X_OK) == 0)
-			break ;
-		free(full_path);
-		full_path = NULL;
+   	 	content = ft_strjoin(content, tmp);
+   		free(tmp);
+    	tmp = get_next_line(0);
 	}
-	free_matrix(dirs);
-	return (full_path);
+	if (tmp && content)
+		write(fds[0], content, ft_strlen(content) - 1);
+	free(tmp);
+	free(content);
+	if (!tmp)
+		quit(6, "invalid here_doc", 17);
+	fds[1] = open(argv[argc - 2], O_WRONLY | O_CREAT | O_APPEND, 0644);
 }
 
-static void	free_matrix(char **matrix)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char	**start;
+	char	*newstr;
+	int		i;
+	int		n;
 
-	if (!matrix)
-		return ;
-	start = matrix;
-	while (*matrix)
-		free(*matrix++);
-	free(start);
-}
-
-static char	*ft_strcat(char *dest, char *src)
-{
-	unsigned int	i;
-	unsigned int	j;
-
-	i = 0;
-	while (dest[i] != '\0')
-		i++;
-	j = -1;
-	while (src[++j] != '\0')
-		dest[i + j] = src[j];
-	dest[i + j] = '\0';
-	return (dest);
+	i = -1;
+	newstr = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!newstr)
+		quit(14, "failed to allocate memory", 26);
+	while (s1 && s1[++i] != '\0')
+		newstr[i] = s1[i];
+	free(s1);
+	n = i + (!s1);
+	i = -1;
+	while (s2[++i] != '\0')
+		newstr[n + i] = s2[i];
+	newstr[n + i] = '\0';
+	return (newstr);
 }

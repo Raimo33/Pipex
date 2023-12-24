@@ -6,13 +6,13 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/23 17:07:49 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/24 14:33:16 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
-SRCS = pipex.c pipex_utils.c general_utils.c
-SRCS_BONUS = pipex_bonus.c pipex_utils_bonus.c general_utils_bonus.c ${addprefix gnl_bonus/, ${addprefix get_next_line, .c _utils.c}}
+SRCS = main.c pipex_logic.c pipex_utils.c string_utils.c
+SRCS_BONUS = main_bonus.c pipex_logic.c pipex_utils.c pipex_utils_bonus.c string_utils.c ${addprefix gnl_bonus/, ${addprefix get_next_line, .c _utils.c}}
 OBJS = ${SRCS:.c=.o}
 OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 HEADER = pipex.h

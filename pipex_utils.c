@@ -5,33 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/23 21:20:07 by craimond         ###   ########.fr       */
+/*   Created: 2023/12/24 13:57:18 by craimond          #+#    #+#             */
+/*   Updated: 2023/12/24 14:34:01 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char	*ft_strcat(char *dest, char *src);
-static int	ft_strlen(char *str);
-static void	free_matrix(char **matrix);
+static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_array);
 
-void	quit(unsigned char id, char *msg, unsigned short len)
+char *get_path(char **envp)
 {
-	unsigned short	i;
-
-	if (msg && *msg)
-		(void)(write(2, "Error: ", 8) + write(2, msg, len));
-	else if (!msg && id != 0)
-		perror("Error");
-	free_matrix(buffers.str_array);
-	free_matrix(buffers.cmd_args);
-	free(buffers.cmd_path);
-	i = -1;
-	if (buffers.fds)
-		while (++i < 4)
-			close(buffers.fds[i]);
-	exit(id);
+	while (envp && *envp)
+		if (ft_strncmp(*envp++, "PATH=", 5) == 0)
+			return (*(envp - 1) + 5);
+	quit(11, "PATH not found", 15);
+	return (NULL);
 }
 
 char	*find_cmd(char *path, char *cmd)
@@ -62,38 +51,66 @@ char	*find_cmd(char *path, char *cmd)
 	return (full_path);
 }
 
-static void	free_matrix(char **matrix)
+char	**ft_split(char *s, char c)
 {
-	char	**start;
-
-	if (!matrix)
-		return ;
-	start = matrix;
-	while (*matrix)
-		free(*matrix++);
-	free(start);
-}
-
-static char	*ft_strcat(char *dest, char *src)
-{
+	char			**str_array;
+	unsigned int	n_words;
 	unsigned int	i;
-	unsigned int	j;
 
-	i = 0;
-	while (dest[i] != '\0')
-		i++;
-	j = -1;
-	while (src[++j] != '\0')
-		dest[i + j] = src[j];
-	dest[i + j] = '\0';
-	return (dest);
+	if (!s || *s == '\0')
+		return (NULL);
+	i = -1;
+	n_words = 0;
+	if (s[0] != c && s[0] != '\0')
+		n_words = 1;
+	while (s[++i + 1] != '\0')
+		if (s[i] == c && s[i + 1] != c && s[i + 1] != '\0')
+			n_words++;
+	str_array = malloc(sizeof(char *) * (n_words + 1));
+	if (!str_array)
+		quit(10, "failed to allocate memory", 26);
+	buffers.str_array = str_array;
+	str_array[n_words] = NULL;
+	return (fill_matrix(n_words, s, c, str_array));
 }
-static int	ft_strlen(char *str)
-{
-	char	*start;
 
-	start = str;
-	while (*str++ != '\0')
-		;
-	return (str - start - 1);
+static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_array)
+{
+	unsigned int	g;
+	unsigned int	len;
+
+	g = -1;
+	while (++g < n_words)
+	{
+		len = 0;
+		while (*s == c)
+			s++;
+		while (s[len] != c && s[len] != '\0')
+			len++;
+		str_array[g] = malloc(sizeof(char) * (len + 1));
+		if (!str_array[g])
+			quit(11, "failed to allocate memory", 26);
+		ft_strncpy(str_array[g], s, len);
+		str_array[g][len] = '\0';
+		s += len;
+	}
+    return (str_array);
+}
+
+void	quit(unsigned char id, char *msg, unsigned short len)
+{
+	unsigned short	i;
+
+	if (msg && *msg)
+		(void)(write(2, "Error: ", 8) + write(2, msg, len));
+	else if (!msg && id != 0)
+		perror("Error");
+	free_matrix(buffers.str_array);
+	free_matrix(buffers.cmd_args);
+	i = -1;
+	if (buffers.fds)
+		while (++i < 4)
+			close(buffers.fds[i]);
+	unlink(".here_doc.tmp");
+	exit(id);
 }
