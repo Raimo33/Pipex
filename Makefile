@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/24 17:30:49 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/27 15:04:38 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ bonus: $(OBJS) $(OBJS_BONUS) $(HEADER) ${HEADER_BONUS}
 	@cc -Wall -Wextra -Werror $(OBJS_BONUS) -o $(NAME)
 	@echo compiled $(NAME) with bonus
 
-clean: $(OBJS)
+clean:
 	@rm -rf $(OBJS) $(OBJS_BONUS)
 	@echo deleted obj files
 

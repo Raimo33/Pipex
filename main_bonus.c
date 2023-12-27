@@ -6,19 +6,19 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:56:54 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:26:08 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:11:19 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-struct s_buffers	buffers;
+struct s_buffers	g_buffers;
 
 int	main(int argc, char **argv, char **envp)
 {
-	int 			fds[4]; // infile, outfile, pipe read, pipe write
-	int				i;
-	char			*path;
+	int		fds[4];
+	int		i;
+	char	*path;
 
 	init(fds);
 	if (argc < 5 + (ft_strncmp(argv[1], "here_doc", 8) == 0))

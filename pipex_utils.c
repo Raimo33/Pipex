@@ -6,15 +6,15 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:57:18 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:29:41 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:06:03 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_array);
+static char	**fill_matrix(unsigned int n_words, char *s, char c, char **matrix);
 
-char *get_path(char **envp)
+char	*get_path(char **envp)
 {
 	while (envp && *envp)
 		if (ft_strncmp(*envp++, "PATH=", 5) == 0)
@@ -69,12 +69,12 @@ char	**ft_split(char *s, char c)
 	str_array = malloc(sizeof(char *) * (n_words + 1));
 	if (!str_array)
 		quit(8, "failed to allocate memory", 26);
-	buffers.str_array = str_array;
+	g_buffers.str_array = str_array;
 	str_array[n_words] = NULL;
 	return (fill_matrix(n_words, s, c, str_array));
 }
 
-static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_array)
+static char	**fill_matrix(unsigned int n_words, char *s, char c, char **matrix)
 {
 	unsigned int	g;
 	unsigned int	len;
@@ -87,15 +87,15 @@ static char	**fill_matrix(unsigned int n_words, char *s, char c, char **str_arra
 			s++;
 		while (s[len] != c && s[len] != '\0')
 			len++;
-		str_array[g] = malloc(sizeof(char) * (len + 1));
-		if (!str_array[g])
+		matrix[g] = malloc(sizeof(char) * (len + 1));
+		if (!matrix[g])
 			quit(9, "failed to allocate memory", 26);
-		ft_strncpy(str_array[g], s, len);
-		str_array[g][len] = '\0';
+		ft_strncpy(matrix[g], s, len);
+		matrix[g][len] = '\0';
 		s += len;
 	}
-	buffers.str_array = NULL;
-    return (str_array);
+	g_buffers.str_array = NULL;
+	return (matrix);
 }
 
 void	quit(unsigned char id, char *msg, unsigned short len)
@@ -106,16 +106,14 @@ void	quit(unsigned char id, char *msg, unsigned short len)
 		(void)(write(2, "Error: ", 8) + write(2, msg, len));
 	else if (!msg && id != 0)
 		perror("Error");
-	free_matrix(buffers.str_array);
-	//buffers.str_array = NULL;
-	free_matrix(buffers.cmd_args);
-	//buffers.cmd_args = NULL;
-	free(buffers.cmd_path);
+	free_matrix(g_buffers.str_array);
+	free_matrix(g_buffers.cmd_args);
+	free(g_buffers.cmd_path);
 	i = -1;
-	if (buffers.fds)
+	if (g_buffers.fds)
 		while (++i < 4)
-			if (buffers.fds[i] != -1)
-				close(buffers.fds[i]);
+			if (g_buffers.fds[i] != -1)
+				close(g_buffers.fds[i]);
 	unlink(".here_doc.tmp");
 	exit(id);
 }

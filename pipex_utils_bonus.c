@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:37:37 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:04:50 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:07:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ void	handle_here_doc(int fds[], char **argv, int argc)
 	limiter = *argv;
 	len = ft_strlen(limiter);
 	content = NULL;
-    tmp = get_next_line(0);
+	tmp = get_next_line(0);
 	while (tmp && ft_strncmp(tmp, limiter, len + 1) != 0)
 	{
-   	 	content = ft_strjoin(content, tmp);
-   		free(tmp);
-    	tmp = get_next_line(0);
+		content = ft_strjoin(content, tmp);
+		free(tmp);
+		tmp = get_next_line(0);
 	}
 	if (tmp && content)
 		write(fds[0], content, ft_strlen(content) - 1);

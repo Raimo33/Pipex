@@ -6,17 +6,17 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:03:03 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:10:08 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:11:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-struct s_buffers	buffers;
+struct s_buffers	g_buffers;
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		fds[4]; // infile, outfile, pipe read, pipe write
+	int		fds[4];
 	char	*path;
 
 	init(fds);

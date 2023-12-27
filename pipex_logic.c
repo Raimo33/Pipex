@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 14:25:21 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/24 17:29:34 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:13:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ void	init(int fds[])
 	fds[1] = -1;
 	fds[2] = -1;
 	fds[3] = -1;
-	buffers.fds = fds;
-	buffers.str_array = NULL;
-	buffers.cmd_path = NULL;
+	g_buffers.fds = fds;
+	g_buffers.str_array = NULL;
+	g_buffers.cmd_path = NULL;
 }
 
 void	handle_command(int fds[], char **argv, char *path, char **envp)
 {
 	pid_t	id;
-	
+
 	if (pipe(fds + 2) == -1)
 		quit(3, NULL, 0);
 	id = fork();
@@ -50,18 +50,21 @@ void	handle_pipe(int fds[], char **argv, char *path, char **envp)
 	int		out_fd;
 
 	out_fd = 1 * (!*(argv + 2)) + 3 * (*(argv + 2) != NULL);
-	if (dup2(fds[0], STDIN_FILENO) == -1 || dup2(fds[out_fd], STDOUT_FILENO) == -1 || reset_fd(&fds[0]) == -1 || reset_fd(&fds[out_fd]) == -1)
+	if (dup2(fds[0], STDIN_FILENO) == -1
+		|| dup2(fds[out_fd], STDOUT_FILENO) == -1
+		|| reset_fd(&fds[0]) == -1
+		|| reset_fd(&fds[out_fd]) == -1)
 		quit(42, NULL, 0);
-	buffers.cmd_args = ft_split(*argv, ' ');
-	buffers.cmd_path = find_cmd(path, buffers.cmd_args[0]);
-	if (!buffers.cmd_path)
+	g_buffers.cmd_args = ft_split(*argv, ' ');
+	g_buffers.cmd_path = find_cmd(path, g_buffers.cmd_args[0]);
+	if (!g_buffers.cmd_path)
 	{
 		error_msg[0] = '\0';
 		ft_strcat(error_msg, "command not found: ");
-		ft_strcat(error_msg, buffers.cmd_args[0]);
+		ft_strcat(error_msg, g_buffers.cmd_args[0]);
 		quit(43, error_msg, ft_strlen(error_msg));
 	}
-	if (execve(buffers.cmd_path, buffers.cmd_args, envp) == -1)
+	if (execve(g_buffers.cmd_path, g_buffers.cmd_args, envp) == -1)
 		quit(44, NULL, 0);
 }
 
@@ -81,7 +84,7 @@ void	wait_child(void)
 	}
 }
 
-static char reset_fd(int *fd)
+static char	reset_fd(int *fd)
 {
 	if (close(*fd) == -1)
 		return (-1);
