@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 22:27:55 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/27 15:18:03 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:26:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ char	*f_strjoin(char *s1, char *s2);
 int		ft_strlen(char *str);
 char	*ft_calloc(size_t nmemb, size_t size);
 char	*free_and_null(char *to_free, char **to_null);
+void	quit(unsigned char id, char *msg, unsigned short len);
 
 #endif

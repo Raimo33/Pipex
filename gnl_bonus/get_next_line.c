@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 22:27:08 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/27 15:18:32 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:27:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_next_line(int fd)
 	{
 		str = ft_calloc(B_SIZE + 1, 1);
 		if (!str)
-			break ;
+			quit(13, "failed to allocate memory", 26);
 		out = read(fd, str, B_SIZE);
 		buf = f_strjoin(ptr, str);
 		ptr = buf;

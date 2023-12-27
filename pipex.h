@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:17:51 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/27 15:11:07 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:25:28 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,14 @@ void	wait_child(void);
 char	*get_path(char **envp);
 char	*find_cmd(char *path, char *cmd);
 char	**ft_split(char *s, char c);
+
+# ifndef QUIT
+#  define QUIT
+
 void	quit(unsigned char id, char *msg, unsigned short len);
+
+# endif
+
 char	ft_strncmp(char *s1, char *s2, int n);
 char	*ft_strncpy(char *dest, char *src, int n);
 char	*ft_strcat(char *dest, char *src);
