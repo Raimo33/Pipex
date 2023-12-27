@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 13:57:18 by craimond          #+#    #+#             */
-/*   Updated: 2023/12/27 15:06:03 by craimond         ###   ########.fr       */
+/*   Updated: 2023/12/27 15:28:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	quit(unsigned char id, char *msg, unsigned short len)
 	unsigned short	i;
 
 	if (msg && *msg)
-		(void)(write(2, "Error: ", 8) + write(2, msg, len));
+		(void)(write(2, "Error: ", 8) + write(2, msg, len) + write(1, "\n", 1));
 	else if (!msg && id != 0)
 		perror("Error");
 	free_matrix(g_buffers.str_array);
