@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/03 15:17:48 by craimond          #+#    #+#              #
-#    Updated: 2023/12/27 15:04:38 by craimond         ###   ########.fr        #
+#    Updated: 2023/12/27 15:59:57 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,10 @@ $(NAME): $(OBJS) $(HEADER)
 
 all: $(NAME)
 
-%.o: %.c
+%.o: %.c 
 	@cc -Wall -Wextra -Werror -c $< -o $@
 
-bonus: $(OBJS) $(OBJS_BONUS) $(HEADER) ${HEADER_BONUS}
+bonus: $(OBJS_BONUS) $(HEADER) $(HEADER_BONUS)
 	@cc -Wall -Wextra -Werror $(OBJS_BONUS) -o $(NAME)
 	@echo compiled $(NAME) with bonus
 
@@ -49,4 +49,4 @@ debug: $(DOBJS) $(HEADER)
 	@gdb --args ./$(NAME) infile "$(CMD1)" "$(CMD2)" outfile
 	@fclean
 
-.PHONY: all clean fclean debug re
+.PHONY: all clean fclean debug re bonus
